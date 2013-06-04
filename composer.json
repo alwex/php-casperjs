@@ -1,8 +1,9 @@
 {
     "name": "php-casperjs",
-    "type": "library",
-    "homepage": "https://github.com/alwex/php-casperjs",
     "description": "Simple PHP wrapper for CasperJS",
+    "homepage": "https://github.com/alwex/php-casperjs",
+    "type": "library",
+    "license": "MIT",
     "authors": [
         {
             "name": "GUIDET Alexandre",
