@@ -2,6 +2,7 @@
     "name": "php/casperjs",
     "description": "Simple PHP wrapper for CasperJS",
     "homepage": "https://github.com/alwex/php-casperjs",
+    "keywords": ["phpunit", "test", "browser"],
     "type": "library",
     "license": "MIT",
     "authors": [
