@@ -13,8 +13,31 @@ namespace Browser;
  */
 class Casper
 {
-    private $_script = '';
+    private $_TAG_CURRENT_URL = '[CURRENT_URL]';
+    private $_TAG_CURRENT_TITLE = '[CURRENT_TITLE]';
+    private $_TAG_CURRENT_PAGE_CONTENT ='[CURRENT_PAGE_CONTENT]';
+    private $_TAG_CURRENT_HTML ='[CURRENT_HTML]';
 
+    private $_script = '';
+    private $_output = array();
+
+    /**
+     * @param array $output
+     * @return Casper
+    */
+    public function setOutput($output)
+    {
+        $this->_output = $output;
+        return $this;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOutput()
+    {
+        return $this->_output;
+    }
     /**
      * clear the current casper script
      */
@@ -90,6 +113,13 @@ FRAGMENT;
         $output = array();
 
         $fragment =<<<FRAGMENT
+casper.then(function () {
+    this.echo('$this->_TAG_CURRENT_URL' + this.getCurrentUrl());
+    this.echo('$this->_TAG_CURRENT_TITLE' + this.getTitle());
+    this.echo('$this->_TAG_CURRENT_PAGE_CONTENT' + this.getPageContent());
+    this.echo('$this->_TAG_CURRENT_HTML' + this.getHTML());
+});
+
 casper.run(function() {
   this.test.renderResults(true, 0, this.cli.get('save') || false);
 });
@@ -101,6 +131,21 @@ FRAGMENT;
         file_put_contents('/tmp/test-casperjs.js', $this->_script);
         exec('casperjs /tmp/test-casperjs.js', $output);
 
+        $this->setOutput($output);
+
         return $output;
+    }
+
+    public function getCurrentUrl()
+    {
+        $currentUrl = null;
+        foreach ($this->getOutput() as $outputLine) {
+            if (strpos($outputLine, $this->_TAG_CURRENT_URL) !== false) {
+                $currentUrl = str_replace($this->_TAG_CURRENT_URL, '', $outputLine);
+                break;
+            }
+        }
+
+        return $currentUrl;
     }
 }

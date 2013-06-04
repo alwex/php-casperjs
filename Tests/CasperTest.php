@@ -12,6 +12,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
     public function testStart_onGoogleSearchPage()
     {
         $casper = new Casper();
+
         $casper->start('http://www.google.com');
         $casper->fillForm(
                 'form[action="/search"]',
@@ -19,9 +20,11 @@ class CasperTest extends PHPUnit_Framework_TestCase
                         'q' => 'search'
                 ),
                 true);
+        $casper->click('h3.r a');
+        $casper->run();
 
-        $output = $casper->run();
-
-        var_dump($output);
+        $this->assertTrue(is_array($casper->getOutput()));
+        $this->assertTrue(sizeof($casper->getOutput()) > 0);
+        $this->assertNotNull($casper->getCurrentUrl());
     }
 }
