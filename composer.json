@@ -1,5 +1,6 @@
 {
-    "type": "project",
+    "name": "php-casperjs",
+    "type": "library",
     "homepage": "https://github.com/alwex/php-casperjs",
     "description": "Simple PHP wrapper for CasperJS",
     "authors": [
