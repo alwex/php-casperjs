@@ -27,4 +27,24 @@ class CasperTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(sizeof($casper->getOutput()) > 0);
         $this->assertNotNull($casper->getCurrentUrl());
     }
+
+    public function testGetRequestedUrls()
+    {
+        $urls = array();
+
+        $casper = new Casper();
+
+        $casper->start('http://www.google.com');
+        $casper->fillForm(
+                'form[action="/search"]',
+                array(
+                        'q' => 'search'
+                ),
+                true);
+        $casper->click('h3.r a');
+        $casper->run();
+
+        $this->assertNotEmpty($casper->getRequestedUrls());
+        $this->assertContains('http://www.google.com/', $casper->getRequestedUrls());
+    }
 }

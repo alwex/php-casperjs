@@ -20,12 +20,14 @@ class Casper
 
     private $_script = '';
     private $_output = array();
+    private $_requestedUrls = array();
+    private $_currentUrl = '';
 
     /**
      * @param array $output
      * @return Casper
     */
-    public function setOutput($output)
+    private function _setOutput($output)
     {
         $this->_output = $output;
         return $this;
@@ -41,9 +43,12 @@ class Casper
     /**
      * clear the current casper script
      */
-    public function clear()
+    private function _clear()
     {
         $this->_script = '';
+        $this->_output = array();
+        $this->_requestedUrls = array();
+        $this->_currentUrl = '';
     }
 
     /**
@@ -53,6 +58,8 @@ class Casper
      */
     public function start($url)
     {
+        $this->_clear();
+
         $fragment =<<<FRAGMENT
 var casper = require('casper').create({
     verbose: true,
@@ -131,21 +138,40 @@ FRAGMENT;
         file_put_contents('/tmp/test-casperjs.js', $this->_script);
         exec('casperjs /tmp/test-casperjs.js', $output);
 
-        $this->setOutput($output);
+        $this->_setOutput($output);
+        $this->_processOutput();
 
         return $output;
     }
 
-    public function getCurrentUrl()
+    /**
+     * process the output after navigation
+     * and fill the differents attributes for
+     * later usage
+     */
+    private function _processOutput()
     {
-        $currentUrl = null;
         foreach ($this->getOutput() as $outputLine) {
             if (strpos($outputLine, $this->_TAG_CURRENT_URL) !== false) {
-                $currentUrl = str_replace($this->_TAG_CURRENT_URL, '', $outputLine);
-                break;
+                $this->_currentUrl = str_replace($this->_TAG_CURRENT_URL, '', $outputLine);
+            }
+
+            if (strpos($outputLine, "Navigation requested: url=") !== false) {
+
+                $frag0 = explode('Navigation requested: url=', $outputLine);
+                $frag1 = explode(', type=', $frag0[1]);
+                $this->_requestedUrls[] = $frag1[0];
             }
         }
+    }
 
-        return $currentUrl;
+    public function getCurrentUrl()
+    {
+        return $this->_currentUrl;
+    }
+
+    public function getRequestedUrls()
+    {
+        return $this->_requestedUrls;
     }
 }
