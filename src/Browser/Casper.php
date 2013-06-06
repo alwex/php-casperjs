@@ -97,6 +97,40 @@ FRAGMENT;
         $this->_script .= $fragment;
     }
 
+    /**
+     * wait until the text $text
+     * appear on the page
+     *
+     * @param string $text
+     */
+    public function waitForText($text)
+    {
+        $fragment =<<<FRAGMENT
+casper.waitForText('$text', function () {
+    this.echo('found text "$text"');
+});
+FRAGMENT;
+
+        $this->_script .= $fragment;
+    }
+
+    /**
+     * wait until the text $text
+     * appear on the page
+     *
+     * @param string $text
+     */
+    public function waitForSelector($selector)
+    {
+        $fragment =<<<FRAGMENT
+casper.waitForSelector('$selector', function () {
+    this.echo('found selector "$selector"');
+});
+FRAGMENT;
+
+        $this->_script .= $fragment;
+    }
+
     public function click($selector)
     {
         $fragment =<<<FRAGMENT
