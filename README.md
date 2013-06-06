@@ -1,11 +1,25 @@
 php-casperjs
 ============
 
-simple PHP wrapper for CasperJS
+php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate 
+user testing against web pages.
 
-Usage :
+It is easy to integrate into PHPUnit test case.
+
+Installation
+------------
+
+Before using php-casperjs, you need to install both library:
+
+1 - **PhantomJS** http://phantomjs.org/download.html
+2 - **CasperJS** http://casperjs.org/installation.html
+
+Usage
+-----
+
 ```php
 <?php
+
 use Browser\Casper;
 
 $casper = new Casper();
