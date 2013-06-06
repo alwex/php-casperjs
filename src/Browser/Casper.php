@@ -161,6 +161,36 @@ FRAGMENT;
         $this->_script .= $fragment;
     }
 
+
+    /**
+     * take a screenshot of the page
+     * area defined by
+     * array(top left width height)
+     *
+     * @param array $area
+     * @param string $filename
+     */
+    public function capture(array $area, $filename)
+    {
+        $top    = $area['top'];
+        $left   = $area['left'];
+        $width  = $area['width'];
+        $height = $area['height'];
+
+        $fragment =<<<FRAGMENT
+casper.then(function() {
+    this.capture('$filename', {
+        top: $top,
+        left: $left,
+        width: $width,
+        height: $height
+    });
+});
+FRAGMENT;
+
+        $this->_script .= $fragment;
+    }
+
     /**
      * run the casperJS script and return the stdOut
      * in using the output variable

@@ -96,9 +96,31 @@ class CasperTest extends PHPUnit_Framework_TestCase
         $casper->captureSelector('#hplogo', $filename);
         $casper->run();
 
-        var_dump($casper->getOutput());
+        $this->assertFileExists($filename);
+        unlink($filename);
+        $this->assertFileNotExists($filename);
+    }
+
+    public function testCapture()
+    {
+        $filename = '/tmp/casperjs-test.png';
+
+        $casper = new Casper();
+
+        $casper->start('http://www.google.com');
+        $casper->capture(
+                array(
+                    'top' => 0,
+                    'left' => 0,
+                    'width' => 800,
+                    'height' => 600
+                ),
+                $filename
+        );
+        $casper->run();
 
         $this->assertFileExists($filename);
         unlink($filename);
+        $this->assertFileNotExists($filename);
     }
 }
