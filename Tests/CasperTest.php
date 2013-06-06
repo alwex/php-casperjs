@@ -85,4 +85,20 @@ class CasperTest extends PHPUnit_Framework_TestCase
         $this->assertNotEmpty($casper->getRequestedUrls());
         $this->assertContains('http://www.google.com/', $casper->getRequestedUrls());
     }
+
+    public function testCaptureSelector()
+    {
+        $filename = '/tmp/casperjs-test.png';
+
+        $casper = new Casper();
+
+        $casper->start('http://www.google.com');
+        $casper->captureSelector('#hplogo', $filename);
+        $casper->run();
+
+        var_dump($casper->getOutput());
+
+        $this->assertFileExists($filename);
+        unlink($filename);
+    }
 }

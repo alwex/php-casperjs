@@ -144,6 +144,24 @@ FRAGMENT;
     }
 
     /**
+     * take a screenshot of the page
+     * area containing the selector
+     *
+     * @param string $selector
+     * @param string $filename
+     */
+    public function captureSelector($selector, $filename)
+    {
+        $fragment =<<<FRAGMENT
+casper.then(function() {
+    this.captureSelector('$filename', '$selector');
+});
+FRAGMENT;
+
+        $this->_script .= $fragment;
+    }
+
+    /**
      * run the casperJS script and return the stdOut
      * in using the output variable
      *
