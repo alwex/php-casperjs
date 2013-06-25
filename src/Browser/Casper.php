@@ -67,7 +67,12 @@ var casper = require('casper').create({
     colorizerType: 'Dummy'
 });
 
-casper.start('$url', function() { });
+casper.userAgent('Casper');
+casper.start('$url', function() {
+    headers: {
+        'Accept': 'text/html'
+    }
+});
 
 FRAGMENT;
 
