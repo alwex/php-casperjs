@@ -68,10 +68,12 @@ var casper = require('casper').create({
 });
 
 casper.userAgent('Casper');
-casper.start('$url', function() {
-    headers: {
-        'Accept': 'text/html'
-    }
+casper.start().then(function() {
+    this.open('$url', {
+        headers: {
+            'Accept': 'text/html'
+        }
+    });
 });
 
 FRAGMENT;
