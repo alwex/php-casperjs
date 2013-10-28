@@ -6,6 +6,8 @@ user testing against web pages.
 
 It is easy to integrate into PHPUnit test case.
 
+Making webcrawler has never been so easy !
+
 Installation
 ------------
 
