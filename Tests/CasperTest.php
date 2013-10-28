@@ -138,7 +138,9 @@ class CasperTest extends PHPUnit_Framework_TestCase
 </html>
 HTML;
 
-        file_put_contents('/tmp/iframe1.html', $html);
+        $filename = '/tmp/iframe1.html';
+
+        file_put_contents($filename, $html);
 
         $year = date('Y');
         $year++;
@@ -173,5 +175,10 @@ HTML;
         }
 
         $this->assertTrue($found);
+
+        $this->assertFileExists($filename);
+        unlink($filename);
+        $this->assertFileNotExists($filename);
+
     }
 }
