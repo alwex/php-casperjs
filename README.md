@@ -59,6 +59,18 @@ $casper->capture(
 // click the first result
 $casper->click('h3.r a');
 
+// switch to the first iframe
+$casper->switchToChildFrame(0);
+
+// make some stuff inside the iframe
+$casper->fillForm('#myForm', array(
+    'search' => 'my search',
+));
+
+// get back to parent
+$casper->switchToParentFrame();
+        
+       
 // run the casper script
 $casper->run();
 
