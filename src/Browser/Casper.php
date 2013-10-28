@@ -55,6 +55,8 @@ class Casper
      * open the specified url
      *
      * @param unknown $url
+     *
+     * @return \Browser\Casper
      */
     public function start($url)
     {
@@ -79,6 +81,8 @@ casper.start().then(function() {
 FRAGMENT;
 
         $this->_script = $fragment;
+
+        return $this;
     }
 
     /**
@@ -88,6 +92,8 @@ FRAGMENT;
      * @param unknown $selector
      * @param unknown $data
      * @param string $submit
+     *
+     * @return \Browser\Casper
      */
     public function fillForm($selector, $data = array(), $submit = false)
     {
@@ -102,6 +108,8 @@ casper.then(function () {
 FRAGMENT;
 
         $this->_script .= $fragment;
+
+        return $this;
     }
 
     /**
@@ -109,6 +117,8 @@ FRAGMENT;
      * appear on the page
      *
      * @param string $text
+     *
+     * @return \Browser\Casper
      */
     public function waitForText($text)
     {
@@ -119,6 +129,8 @@ casper.waitForText('$text', function () {
 FRAGMENT;
 
         $this->_script .= $fragment;
+
+        return $this;
     }
 
     /**
@@ -126,6 +138,8 @@ FRAGMENT;
      * appear on the page
      *
      * @param string $text
+     *
+     * @return \Browser\Casper
      */
     public function waitForSelector($selector)
     {
@@ -136,8 +150,16 @@ casper.waitForSelector('$selector', function () {
 FRAGMENT;
 
         $this->_script .= $fragment;
+
+        return $this;
     }
 
+    /**
+     *
+     * @param unknown $selector
+     *
+     * @return \Browser\Casper
+     */
     public function click($selector)
     {
         $fragment =<<<FRAGMENT
@@ -148,6 +170,8 @@ casper.then(function() {
 FRAGMENT;
 
         $this->_script .= $fragment;
+
+        return $this;
     }
 
     /**
@@ -156,6 +180,8 @@ FRAGMENT;
      *
      * @param string $selector
      * @param string $filename
+     *
+     * @return \Browser\Casper
      */
     public function captureSelector($selector, $filename)
     {
@@ -166,6 +192,8 @@ casper.then(function() {
 FRAGMENT;
 
         $this->_script .= $fragment;
+
+        return $this;
     }
 
 
@@ -176,6 +204,8 @@ FRAGMENT;
      *
      * @param array $area
      * @param string $filename
+     *
+     * @return \Browser\Casper
      */
     public function capture(array $area, $filename)
     {
@@ -196,7 +226,48 @@ casper.then(function() {
 FRAGMENT;
 
         $this->_script .= $fragment;
+
+        return $this;
     }
+
+    /**
+     * switch to the child frame number $id
+     *
+     * @param unknown $id
+     * @return \Browser\Casper
+     */
+    public function switchToChildFrame($id)
+    {
+        $fragment =<<<FRAGMENT
+casper.then(function() {
+    this.page.switchToChildFrame($id);
+});
+FRAGMENT;
+
+        $this->_script .= $fragment;
+
+        return $this;
+    }
+
+    /**
+     * get back to parent frame
+     *
+     * @return \Browser\Casper
+     */
+    public function switchToParentFrame()
+    {
+        $fragment =<<<FRAGMENT
+casper.then(function() {
+    this.page.switchToParentFrame();
+});
+FRAGMENT;
+
+        $this->_script .= $fragment;
+
+        return $this;
+
+    }
+
 
     /**
      * run the casperJS script and return the stdOut

@@ -110,10 +110,10 @@ class CasperTest extends PHPUnit_Framework_TestCase
         $casper->start('http://www.google.com');
         $casper->capture(
                 array(
-                    'top' => 0,
-                    'left' => 0,
-                    'width' => 800,
-                    'height' => 600
+                        'top' => 0,
+                        'left' => 0,
+                        'width' => 800,
+                        'height' => 600
                 ),
                 $filename
         );
@@ -122,5 +122,56 @@ class CasperTest extends PHPUnit_Framework_TestCase
         $this->assertFileExists($filename);
         unlink($filename);
         $this->assertFileNotExists($filename);
+    }
+
+    public function testSwitchToChildFrame() {
+        $html =<<< HTML
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>iframe 1</title>
+    </head>
+    <body>
+        <iframe name="myiframe" src="https://psp.hipay.com/HiMediaPSP-war/Token.xhtml?p=MXPrDJr9zudQcQnVbDYKDie5a%2BwfqIzj7ngMUvWs%2Bwq4EB7HUVX2W0JF4Xf4n8YlqLGjIS8brZLdeQylx68L8GleJkXWWkzYMky9pPGZL35LQbAevTNU9PaZCkQuGPitWtel%2FUs65p3JSIKJC9mBGAx04ihP%2Ble3ZzJ949oSfh8xsJBofUw29Th1Z5%2BkYrkEVH04OR%2FKP3VloW%2FKNDYYMlw%2B4MTkzrIsqMPbENxuNS%2B5CJCpEMRDhTOh%2BFgCUjZrk62vgcdtbrXeKrmCNtDCfWMHI5xLo1qntxa%2FNcXUAMX8NZqFjZCj0PyROKVkHUc3QcVY%2FvVWJsbrqR8aW59PAGf%2FARyDbItUV1ktRP7aQexfn8xSO7GpldfPmEAopCM8tfMtS1%2B2bs0%3D" style="width:900px; height:800px;"></iframe>
+    </body>
+</html>
+HTML;
+
+        file_put_contents('/tmp/iframe1.html', $html);
+
+        $year = date('Y');
+        $year++;
+
+        $casper = new Casper();
+
+        $casper->start('file:///tmp/iframe1.html')
+        ->switchToChildFrame(0)
+        ->fillForm('#tokenizerForm', array(
+                'tokenizerForm\:cardNumber' => 'testing',
+                'tokenizerForm\:cardHolder' => 'Jean Valjean',
+                'tokenizerForm\:cardExpiryYear' => $year,
+                'tokenizerForm\:cardSecurityCode' => '123',
+        ))
+        ->switchToParentFrame()
+        ->capture(
+                array(
+                        'top' => 0,
+                        'left' => 0,
+                        'width' => 800,
+                        'height' => 600
+                ),
+                '/tmp/testage.png'
+        )
+        ->run();
+
+        $found = false;
+        foreach ($casper->getOutput() as $logLine) {
+            if (preg_match('/Set "tokenizerForm:cardNumber" field value to testing/', $logLine)) {
+                $found = true;
+            }
+        }
+
+        $this->assertTrue($found);
     }
 }
