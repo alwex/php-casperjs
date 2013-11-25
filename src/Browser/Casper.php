@@ -308,9 +308,7 @@ casper.then(function () {
     this.echo('$this->_TAG_CURRENT_HTML' + this.getHTML());
 });
 
-casper.run(function() {
-  this.test.renderResults(true, 0, this.cli.get('save') || false);
-});
+casper.run();
 
 FRAGMENT;
 
