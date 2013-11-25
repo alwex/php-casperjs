@@ -18,10 +18,30 @@ class Casper
     private $_TAG_CURRENT_PAGE_CONTENT ='[CURRENT_PAGE_CONTENT]';
     private $_TAG_CURRENT_HTML ='[CURRENT_HTML]';
 
+    private $_debug = false;
     private $_script = '';
     private $_output = array();
     private $_requestedUrls = array();
     private $_currentUrl = '';
+
+    /**
+     * enable debug logging into syslog
+     *
+     * @param unknown $debug
+     */
+    public function setDebug($debug)
+    {
+        $this->_debug = $debug;
+    }
+
+    /**
+     *
+     * @return boolean
+     */
+    public function isDebug()
+    {
+        return $this->_debug;
+    }
 
     /**
      * @param array $output
@@ -343,6 +363,10 @@ FRAGMENT;
                 $frag0 = explode('Navigation requested: url=', $outputLine);
                 $frag1 = explode(', type=', $frag0[1]);
                 $this->_requestedUrls[] = $frag1[0];
+            }
+
+            if ($this->isDebug()) {
+                syslog(LOG_INFO, '[PHP-CASPERJS] ' . $outputLine);
             }
         }
     }
