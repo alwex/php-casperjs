@@ -38,6 +38,9 @@ $casper->fillForm(
         ),
         true);
 
+// wait for 5 seconds (have a cofee)
+$casper->wait(5000);
+
 // wait for text if needed for 3 seconds
 $casper->waitForText('Yahoo', 3000);
 

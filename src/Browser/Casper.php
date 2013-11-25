@@ -28,10 +28,12 @@ class Casper
      * enable debug logging into syslog
      *
      * @param unknown $debug
+     * @return Casper
      */
     public function setDebug($debug)
     {
         $this->_debug = $debug;
+        return $this;
     }
 
     /**
@@ -46,7 +48,7 @@ class Casper
     /**
      * @param array $output
      * @return Casper
-    */
+     */
     private function _setOutput($output)
     {
         $this->_output = $output;
