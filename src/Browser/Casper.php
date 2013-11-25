@@ -121,12 +121,19 @@ FRAGMENT;
      *
      * @return \Browser\Casper
      */
-    public function waitForText($text, $timeout=10000)
+    public function waitForText($text, $timeout=5000)
     {
         $fragment =<<<FRAGMENT
-casper.waitForText('$text', function () {
-    this.echo('found text "$text"');
-}, $timeout);
+casper.waitForText(
+    '$text',
+    function () {
+        this.echo('found text "$text"');
+    },
+    function () {
+        this.echo('timeout occured');
+    },
+    $timeout
+);
 
 FRAGMENT;
 
@@ -143,12 +150,19 @@ FRAGMENT;
      *
      * @return \Browser\Casper
      */
-    public function waitForSelector($selector)
+    public function waitForSelector($selector, $timeout=5000)
     {
         $fragment =<<<FRAGMENT
-casper.waitForSelector('$selector', function () {
-    this.echo('found selector "$selector"');
-});
+casper.waitForSelector(
+    '$selector',
+    function () {
+        this.echo('found selector "$selector"');
+    },
+    function () {
+        this.echo('timeout occured');
+    },
+    $timeout
+);
 
 FRAGMENT;
 
@@ -302,11 +316,14 @@ FRAGMENT;
 
         $this->_script .= $fragment;
 
-        file_put_contents('/tmp/test-casperjs.js', $this->_script);
-        exec('casperjs /tmp/test-casperjs.js', $output);
+        $filename = '/tmp/php-casperjs-' . uniqid() . '.js';
+        file_put_contents($filename, $this->_script);
+        exec('casperjs ' . $filename, $output);
 
         $this->_setOutput($output);
         $this->_processOutput();
+
+        unlink($filename);
 
         return $output;
     }

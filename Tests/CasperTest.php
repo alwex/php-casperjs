@@ -78,7 +78,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
                         'q' => 'search'
                 ),
                 true);
-        $casper->waitForSelector('.gbqfb');
+        $casper->waitForSelector('.gbqfb', 2000);
         $casper->click('h3.r a');
         $casper->run();
 

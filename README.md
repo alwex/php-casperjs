@@ -42,7 +42,7 @@ $casper->fillForm(
 $casper->waitForText('Yahoo', 3000);
 
 // or wait for selector
-$casper->waitForSelector('.gbqfb');
+$casper->waitForSelector('.gbqfb', 3000);
 
 // make a screenshot of the google logo
 $casper->captureSelector('#hplogo', '/tmp/logo.png');
