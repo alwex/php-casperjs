@@ -59,7 +59,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
                         'q' => 'search'
                 ),
                 true);
-        $casper->waitForText('Yahoo');
+        $casper->waitForText('Yahoo', 20000);
         $casper->click('h3.r a');
         $casper->run();
 

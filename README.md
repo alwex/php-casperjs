@@ -38,8 +38,8 @@ $casper->fillForm(
         ),
         true);
 
-// wait for text if needed
-$casper->waitForText('Yahoo');
+// wait for text if needed for 3 seconds
+$casper->waitForText('Yahoo', 3000);
 
 // or wait for selector
 $casper->waitForSelector('.gbqfb');

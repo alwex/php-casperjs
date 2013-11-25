@@ -117,15 +117,17 @@ FRAGMENT;
      * appear on the page
      *
      * @param string $text
+     * @param integer $timeout
      *
      * @return \Browser\Casper
      */
-    public function waitForText($text)
+    public function waitForText($text, $timeout=10000)
     {
         $fragment =<<<FRAGMENT
 casper.waitForText('$text', function () {
     this.echo('found text "$text"');
-});
+}, $timeout);
+
 FRAGMENT;
 
         $this->_script .= $fragment;
@@ -147,6 +149,7 @@ FRAGMENT;
 casper.waitForSelector('$selector', function () {
     this.echo('found selector "$selector"');
 });
+
 FRAGMENT;
 
         $this->_script .= $fragment;
@@ -189,6 +192,7 @@ FRAGMENT;
 casper.then(function() {
     this.captureSelector('$filename', '$selector');
 });
+
 FRAGMENT;
 
         $this->_script .= $fragment;
@@ -223,6 +227,7 @@ casper.then(function() {
         height: $height
     });
 });
+
 FRAGMENT;
 
         $this->_script .= $fragment;
@@ -242,6 +247,7 @@ FRAGMENT;
 casper.then(function() {
     this.page.switchToChildFrame($id);
 });
+
 FRAGMENT;
 
         $this->_script .= $fragment;
@@ -260,6 +266,7 @@ FRAGMENT;
 casper.then(function() {
     this.page.switchToParentFrame();
 });
+
 FRAGMENT;
 
         $this->_script .= $fragment;
