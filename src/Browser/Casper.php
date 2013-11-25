@@ -163,6 +163,29 @@ FRAGMENT;
     }
 
     /**
+     * wait until timeout
+     *
+     * @param number $timeout
+     * @return \Browser\Casper
+     */
+    public function wait($timeout=5000)
+    {
+        $fragment =<<<FRAGMENT
+casper.wait(
+    $timeout,
+    function () {
+        this.echo('timeout occured');
+    }
+);
+
+FRAGMENT;
+
+        $this->_script .= $fragment;
+
+        return $this;
+    }
+
+    /**
      * wait until the text $text
      * appear on the page
      *

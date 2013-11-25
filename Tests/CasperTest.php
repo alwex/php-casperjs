@@ -67,6 +67,21 @@ class CasperTest extends PHPUnit_Framework_TestCase
         $this->assertContains('http://www.google.com/', $casper->getRequestedUrls());
     }
 
+    public function testWait()
+    {
+        $startSecond = time();
+
+        $casper = new Casper();
+
+        $casper->start('http://www.google.com');
+        $casper->wait(3000);
+        $casper->run();
+
+        $endSecond = time();
+
+        $this->assertTrue($endSecond - $startSecond > 2);
+    }
+
     public function testWaitForSelector()
     {
         $casper = new Casper();
