@@ -23,6 +23,16 @@ class Casper
     private $_output = array();
     private $_requestedUrls = array();
     private $_currentUrl = '';
+    private $_userAgent = 'casper';
+
+    /**
+     * Set the UserAgent
+     * @param string $userAgent
+     */
+    public function setUserAgent($userAgent)
+    {
+        $this->_userAgent = $userAgent;
+    }
 
     /**
      * enable debug logging into syslog
@@ -91,7 +101,7 @@ var casper = require('casper').create({
     colorizerType: 'Dummy'
 });
 
-casper.userAgent('Casper');
+casper.userAgent('$this->_userAgent');
 casper.start().then(function() {
     this.open('$url', {
         headers: {
