@@ -23,6 +23,29 @@ class Casper
     private $_output = array();
     private $_requestedUrls = array();
     private $_currentUrl = '';
+    private $_cliOptions = array();
+
+    /**
+     * Set the cli option by param and value (ex. --engine=[phantomjs|slimerjs])
+     *
+     * @param array $cliOptions
+     */
+    public function setCliOptions($cliOptions)
+    {
+        $this->_cliOptions = $cliOptions;
+    }
+
+    /**
+     * @return string
+     */
+    private function _getCliOptions()
+    {
+        $result = '';
+        foreach($this->_cliOptions as $param => $value){
+            $result = '--' . $param . '=' . $value . ' ';
+        }
+        return $result;
+    }
 
     /**
      * enable debug logging into syslog
@@ -361,7 +384,7 @@ FRAGMENT;
 
         $filename = '/tmp/php-casperjs-' . uniqid() . '.js';
         file_put_contents($filename, $this->_script);
-        exec('casperjs ' . $filename, $output);
+        exec('casperjs ' . $this->_getCliOptions() . $filename, $output);
 
         $this->_setOutput($output);
         $this->_processOutput();
