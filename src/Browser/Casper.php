@@ -335,6 +335,22 @@ FRAGMENT;
     }
 
 
+    public function evaluate($function)
+    {
+        $fragment =<<<FRAGMENT
+casper.then(function() {
+    casper.evaluate(function() {
+        $function
+    });
+});
+
+FRAGMENT;
+
+        $this->_script .= $fragment;
+
+        return $this;
+    }
+
     /**
      * run the casperJS script and return the stdOut
      * in using the output variable

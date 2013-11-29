@@ -196,4 +196,40 @@ HTML;
         $this->assertFileNotExists($filename);
 
     }
+
+    public function testEvaluate()
+    {
+        $evaluateHtml =<<<TEXT
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>test evaluate</title>
+    </head>
+    <body>
+        <a id="theLink" href='http://www.google.com' onclick='return confirm("are you sure")'>link to google</a>
+    </body>
+</html>
+TEXT;
+        $filename = '/tmp/test-evaluate.html';
+
+        file_put_contents($filename, $evaluateHtml);
+
+        $casper = new Casper();
+        $casper->start($filename)
+            ->click('#theLink')
+            ->run();
+
+        $this->assertContains('google', $casper->getCurrentUrl());
+
+        $casper = new Casper();
+        $casper->start($filename)
+            ->evaluate('document.getElementById("theLink").href="http://www.yahoo.com";')
+            ->click('#theLink')
+            ->run();
+
+        $this->assertContains('fr.yahoo.com', $casper->getCurrentUrl());
+
+        @unlink($filename);
+    }
 }
