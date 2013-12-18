@@ -116,6 +116,23 @@ FRAGMENT;
 
         return $this;
     }
+    
+    /**
+     * Open URL after the initial opening
+     * @param $url
+     * @return $this
+     */
+    public function thenOpen($url)
+    {
+        $fragment =<<<FRAGMENT
+casper.thenOpen('$url');
+
+FRAGMENT;
+
+        $this->_script .= $fragment;
+
+        return $this;
+    }    
 
     /**
      * fill the form with the array of data
