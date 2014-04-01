@@ -24,6 +24,8 @@ class Casper
     private $_requestedUrls = array();
     private $_currentUrl = '';
 
+    private $_options = array();
+
     /**
      * enable debug logging into syslog
      *
@@ -43,6 +45,15 @@ class Casper
     public function isDebug()
     {
         return $this->_debug;
+    }
+
+    /**
+     * set specific options to casperJS
+     *
+     * @param array $options
+     */
+    public function setOptions(array $options) {
+       $this->_options = $options;
     }
 
     /**
@@ -377,7 +388,14 @@ FRAGMENT;
 
         $filename = '/tmp/php-casperjs-' . uniqid() . '.js';
         file_put_contents($filename, $this->_script);
-        exec('casperjs ' . $filename, $output);
+
+        // options parsing
+        $options = '';
+        foreach ($this->_options as $option => $value) {
+            $options .= ' --' . $option . '=' .$value;
+        }
+
+        exec('casperjs ' . $filename . $options, $output);
 
         $this->_setOutput($output);
         $this->_processOutput();

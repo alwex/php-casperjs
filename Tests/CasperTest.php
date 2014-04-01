@@ -28,6 +28,28 @@ class CasperTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($casper->getCurrentUrl());
     }
 
+    public function testStart_onGoogleSearchPageWithIgnoreSSLErrorOption()
+    {
+        $casper = new Casper();
+        $casper->setOptions(array(
+                'ignore-ssl-errors' => 'yes'
+        ));
+
+        $casper->start('http://www.google.com');
+        $casper->fillForm(
+                'form[action="/search"]',
+                array(
+                        'q' => 'search'
+                ),
+                true);
+        $casper->click('h3.r a');
+        $casper->run();
+
+        $this->assertTrue(is_array($casper->getOutput()));
+        $this->assertTrue(sizeof($casper->getOutput()) > 0);
+        $this->assertNotNull($casper->getCurrentUrl());
+    }
+
     public function testGetRequestedUrls()
     {
         $urls = array();
@@ -229,6 +251,40 @@ TEXT;
             ->run();
 
         $this->assertContains('fr.yahoo.com', $casper->getCurrentUrl());
+
+        @unlink($filename);
+    }
+
+    public function testDoubleClick()
+    {
+        $evaluateHtml =<<<TEXT
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>test evaluate</title>
+    </head>
+    <body>
+        <script type="text/javascript">
+        function increase() {
+            document.getElementById('theField').value++;
+        }
+
+        </script>
+        <a id="theLink" href='#' onclick='javascript:increase()'>test</a>
+        <input type="text" value="0" id="theField" />
+    </body>
+</html>
+TEXT;
+        $filename = '/tmp/test-click.html';
+        file_put_contents($filename, $evaluateHtml);
+
+        $casper = new Casper();
+        $casper->start($filename)
+            ->click("#theLink")
+            ->run();
+
+        print_r($casper->getOutput());
 
         @unlink($filename);
     }
