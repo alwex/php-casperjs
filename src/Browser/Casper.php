@@ -23,6 +23,16 @@ class Casper
     private $_output = array();
     private $_requestedUrls = array();
     private $_currentUrl = '';
+    private $_userAgent = 'casper';
+
+    /**
+     * Set the UserAgent
+     * @param string $userAgent
+     */
+    public function setUserAgent($userAgent)
+    {
+        $this->_userAgent = $userAgent;
+    }
 
     private $_options = array();
 
@@ -102,7 +112,7 @@ var casper = require('casper').create({
     colorizerType: 'Dummy'
 });
 
-casper.userAgent('Casper');
+casper.userAgent('$this->_userAgent');
 casper.start().then(function() {
     this.open('$url', {
         headers: {
@@ -117,6 +127,23 @@ FRAGMENT;
 
         return $this;
     }
+    
+    /**
+     * Open URL after the initial opening
+     * @param $url
+     * @return $this
+     */
+    public function thenOpen($url)
+    {
+        $fragment =<<<FRAGMENT
+casper.thenOpen('$url');
+
+FRAGMENT;
+
+        $this->_script .= $fragment;
+
+        return $this;
+    }    
 
     /**
      * fill the form with the array of data
