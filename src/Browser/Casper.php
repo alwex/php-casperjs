@@ -127,7 +127,7 @@ FRAGMENT;
 
         return $this;
     }
-    
+
     /**
      * Open URL after the initial opening
      * @param $url
@@ -143,7 +143,7 @@ FRAGMENT;
         $this->_script .= $fragment;
 
         return $this;
-    }    
+    }
 
     /**
      * fill the form with the array of data
@@ -419,7 +419,7 @@ FRAGMENT;
         // options parsing
         $options = '';
         foreach ($this->_options as $option => $value) {
-            $options .= ' --' . $option . '=' .$value;
+            $options .= ' --' . $option . '=' . $value;
         }
 
         exec('casperjs ' . $filename . $options, $output);
