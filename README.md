@@ -27,6 +27,12 @@ use Browser\Casper;
 
 $casper = new Casper();
 
+// forward options to phantomJS
+// for exemple to ignore ssl errors
+$casper->setOptions(array(
+    'ignore-ssl-errors' => 'yes'
+));
+
 // navigate to google web page
 $casper->start('http://www.google.com');
 
