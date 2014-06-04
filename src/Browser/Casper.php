@@ -47,6 +47,22 @@ class Casper
         $this->_debug = $debug;
         return $this;
     }
+    
+    public function setViewPort($width, $height)
+    {
+
+        $fragment =<<<FRAGMENT
+casper.then(function () {
+    this.viewport($width, $height);
+});
+
+FRAGMENT;
+
+        $this->_script .= $fragment;
+
+        return $this;
+    }
+
 
     /**
      *
