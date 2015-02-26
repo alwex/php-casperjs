@@ -187,6 +187,31 @@ FRAGMENT;
 
         return $this;
     }
+    
+     /**
+     * Sends native keyboard events 
+     * to the element matching the provided selector:
+     *
+     * @param unknown $selector
+     * @param unknown $string
+     *
+     * @return \Browser\Casper
+     */
+    public function sendKeys($selector, $string)
+    {
+        $jsonData = json_encode($string);
+
+        $fragment =<<<FRAGMENT
+casper.then(function () {
+    this.sendKeys('$selector', $jsonData);
+});
+
+FRAGMENT;
+
+        $this->_script .= $fragment;
+
+        return $this;
+    }
 
     /**
      * wait until the text $text
