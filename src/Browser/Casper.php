@@ -454,7 +454,7 @@ FRAGMENT;
 
         $this->_script .= $fragment;
 
-        $filename = '/tmp/php-casperjs-' . uniqid() . '.js';
+        $filename = tempnam(null,'php-casperjs-');
         file_put_contents($filename, $this->_script);
 
         // options parsing
