@@ -15,8 +15,8 @@ class Casper
 {
     private $_TAG_CURRENT_URL = '[CURRENT_URL]';
     private $_TAG_CURRENT_TITLE = '[CURRENT_TITLE]';
-    private $_TAG_CURRENT_PAGE_CONTENT ='[CURRENT_PAGE_CONTENT]';
-    private $_TAG_CURRENT_HTML ='[CURRENT_HTML]';
+    private $_TAG_CURRENT_PAGE_CONTENT = '[CURRENT_PAGE_CONTENT]';
+    private $_TAG_CURRENT_HTML = '[CURRENT_HTML]';
 
     private $_debug = false;
     private $_script = '';
@@ -24,6 +24,9 @@ class Casper
     private $_requestedUrls = array();
     private $_currentUrl = '';
     private $_userAgent = 'casper';
+    // default viewport values
+    private $_viewPortWidth = 1024;
+    private $_viewPortHeight = 768;
 
     /**
      * Set the UserAgent
@@ -45,13 +48,16 @@ class Casper
     public function setDebug($debug)
     {
         $this->_debug = $debug;
+
         return $this;
     }
-    
+
     public function setViewPort($width, $height)
     {
+        $this->_viewPortWidth = $width;
+        $this->_viewPortHeight = $height;
 
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function () {
     this.viewport($width, $height);
 });
@@ -78,8 +84,9 @@ FRAGMENT;
      *
      * @param array $options
      */
-    public function setOptions(array $options) {
-       $this->_options = $options;
+    public function setOptions(array $options)
+    {
+        $this->_options = $options;
     }
 
     /**
@@ -89,6 +96,7 @@ FRAGMENT;
     private function _setOutput($output)
     {
         $this->_output = $output;
+
         return $this;
     }
 
@@ -99,6 +107,7 @@ FRAGMENT;
     {
         return $this->_output;
     }
+
     /**
      * clear the current casper script
      */
@@ -121,7 +130,7 @@ FRAGMENT;
     {
         $this->_clear();
 
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 var casper = require('casper').create({
     verbose: true,
     logLevel: 'debug',
@@ -151,7 +160,7 @@ FRAGMENT;
      */
     public function thenOpen($url)
     {
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.thenOpen('$url');
 
 FRAGMENT;
@@ -176,7 +185,7 @@ FRAGMENT;
         $jsonData = json_encode($data);
         $jsonSubmit = ($submit) ? 'true' : 'false';
 
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function () {
     this.fill('$selector', $jsonData, $jsonSubmit);
 });
@@ -187,9 +196,9 @@ FRAGMENT;
 
         return $this;
     }
-    
-     /**
-     * Sends native keyboard events 
+
+    /**
+     * Sends native keyboard events
      * to the element matching the provided selector:
      *
      * @param unknown $selector
@@ -201,7 +210,7 @@ FRAGMENT;
     {
         $jsonData = json_encode($string);
 
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function () {
     this.sendKeys('$selector', $jsonData);
 });
@@ -222,9 +231,9 @@ FRAGMENT;
      *
      * @return \Browser\Casper
      */
-    public function waitForText($text, $timeout=5000)
+    public function waitForText($text, $timeout = 5000)
     {
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.waitForText(
     '$text',
     function () {
@@ -249,9 +258,9 @@ FRAGMENT;
      * @param number $timeout
      * @return \Browser\Casper
      */
-    public function wait($timeout=5000)
+    public function wait($timeout = 5000)
     {
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.wait(
     $timeout,
     function () {
@@ -274,9 +283,9 @@ FRAGMENT;
      *
      * @return \Browser\Casper
      */
-    public function waitForSelector($selector, $timeout=5000)
+    public function waitForSelector($selector, $timeout = 5000)
     {
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.waitForSelector(
     '$selector',
     function () {
@@ -303,7 +312,7 @@ FRAGMENT;
      */
     public function click($selector)
     {
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function() {
     this.click('$selector');
 });
@@ -326,7 +335,7 @@ FRAGMENT;
      */
     public function captureSelector($selector, $filename)
     {
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function() {
     this.captureSelector('$filename', '$selector');
 });
@@ -351,12 +360,12 @@ FRAGMENT;
      */
     public function capture(array $area, $filename)
     {
-        $top    = $area['top'];
-        $left   = $area['left'];
-        $width  = $area['width'];
+        $top = $area['top'];
+        $left = $area['left'];
+        $width = $area['width'];
         $height = $area['height'];
 
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function() {
     this.capture('$filename', {
         top: $top,
@@ -374,6 +383,36 @@ FRAGMENT;
     }
 
     /**
+     * take a screenshot of the whole page
+     * area defined by viewport width
+     * and rendered height
+     *
+     * @param string $filename
+     *
+     * @return \Browser\Casper
+     */
+    public function capturePage($filename)
+    {
+
+        $fragment = <<<FRAGMENT
+casper.on('load.finished', function() {
+    this.capture('$filename', {
+        top: 0,
+        left: 0,
+        width: $this->_viewPortWidth,
+        height: this.evaluate(function() {
+        return __utils__.getDocumentHeight();
+        }),
+    });
+});
+FRAGMENT;
+
+        $this->_script .= $fragment;
+
+        return $this;
+    }
+
+    /**
      * switch to the child frame number $id
      *
      * @param unknown $id
@@ -381,7 +420,7 @@ FRAGMENT;
      */
     public function switchToChildFrame($id)
     {
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function() {
     this.page.switchToChildFrame($id);
 });
@@ -400,7 +439,7 @@ FRAGMENT;
      */
     public function switchToParentFrame()
     {
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function() {
     this.page.switchToParentFrame();
 });
@@ -416,7 +455,7 @@ FRAGMENT;
 
     public function evaluate($function)
     {
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function() {
     casper.evaluate(function() {
         $function
@@ -440,7 +479,7 @@ FRAGMENT;
     {
         $output = array();
 
-        $fragment =<<<FRAGMENT
+        $fragment = <<<FRAGMENT
 casper.then(function () {
     this.echo('$this->_TAG_CURRENT_URL' + this.getCurrentUrl());
     this.echo('$this->_TAG_CURRENT_TITLE' + this.getTitle());
@@ -454,16 +493,16 @@ FRAGMENT;
 
         $this->_script .= $fragment;
 
-        $filename = tempnam(null,'php-casperjs-');
+        $filename = tempnam(null, 'php-casperjs-');
         file_put_contents($filename, $this->_script);
 
         // options parsing
         $options = '';
         foreach ($this->_options as $option => $value) {
-            $options .= ' --' . $option . '=' . $value;
+            $options .= ' --'.$option.'='.$value;
         }
 
-        exec('casperjs ' . $filename . $options, $output);
+        exec('casperjs '.$filename.$options, $output);
 
         $this->_setOutput($output);
         $this->_processOutput();
@@ -493,7 +532,7 @@ FRAGMENT;
             }
 
             if ($this->isDebug()) {
-                syslog(LOG_INFO, '[PHP-CASPERJS] ' . $outputLine);
+                syslog(LOG_INFO, '[PHP-CASPERJS] '.$outputLine);
             }
         }
     }
