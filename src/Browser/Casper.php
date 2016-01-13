@@ -27,6 +27,18 @@ class Casper
     // default viewport values
     private $_viewPortWidth = 1024;
     private $_viewPortHeight = 768;
+    private $_current_page_content = '';
+    private $_current_html = '';
+    private $_load_time = '';
+    private $_temp_dir = '/tmp';
+    private $_path2casper = '/usr/local/bin/'; //path to CasperJS
+
+    public function __construct($_path2casper = null, $_temp_dir = null){
+        if($_path2casper)
+            $this->_path2casper = $_path2casper;
+        if($_temp_dir)
+            $this->_temp_dir = $_temp_dir;
+    }
 
     /**
      * Set the UserAgent
@@ -483,8 +495,8 @@ FRAGMENT;
 casper.then(function () {
     this.echo('$this->_TAG_CURRENT_URL' + this.getCurrentUrl());
     this.echo('$this->_TAG_CURRENT_TITLE' + this.getTitle());
-    this.echo('$this->_TAG_CURRENT_PAGE_CONTENT' + this.getPageContent());
-    this.echo('$this->_TAG_CURRENT_HTML' + this.getHTML());
+    this.echo('$this->_TAG_CURRENT_PAGE_CONTENT' + this.getPageContent().replace(new RegExp('\\r?\\n','g'), ''));
+    this.echo('$this->_TAG_CURRENT_HTML' + this.getHTML().replace(new RegExp('\\r?\\n','g'), ''));
 });
 
 casper.run();
@@ -492,8 +504,8 @@ casper.run();
 FRAGMENT;
 
         $this->_script .= $fragment;
+        $filename = tempnam($this->_temp_dir, 'php-casperjs-');
 
-        $filename = tempnam(null, 'php-casperjs-');
         file_put_contents($filename, $this->_script);
 
         // options parsing
@@ -502,7 +514,9 @@ FRAGMENT;
             $options .= ' --'.$option.'='.$value;
         }
 
-        exec('casperjs '.$filename.$options, $output);
+        exec($this->_path2casper.'casperjs '.$filename.$options, $output);
+        if(empty($output))
+            throw new \Exception('Can not find CasperJS.');
 
         $this->_setOutput($output);
         $this->_processOutput();
@@ -534,6 +548,18 @@ FRAGMENT;
             if ($this->isDebug()) {
                 syslog(LOG_INFO, '[PHP-CASPERJS] '.$outputLine);
             }
+            if (strpos($outputLine, $this->_TAG_CURRENT_PAGE_CONTENT) !== false) {
+                $this->_current_page_content = str_replace($this->_TAG_CURRENT_PAGE_CONTENT, '', $outputLine);
+            }
+
+            if (strpos($outputLine, $this->_TAG_CURRENT_HTML) !== false) {
+                $this->_current_html = str_replace($this->_TAG_CURRENT_HTML, '', $outputLine);
+            }
+
+            if (strpos($outputLine, " steps in ") !== false) {
+                $frag = explode(' steps in ', $outputLine);
+                $this->_load_time = $frag[1];
+            }
         }
     }
 
@@ -545,5 +571,20 @@ FRAGMENT;
     public function getRequestedUrls()
     {
         return $this->_requestedUrls;
+    }
+
+    public function getCurrentPageContent()
+    {
+        return $this->_current_page_content;
+    }
+
+    public function getHTML()
+    {
+        return $this->_current_html;
+    }
+
+    public function getLoadTime()
+    {
+        return $this->_load_time;
     }
 }
