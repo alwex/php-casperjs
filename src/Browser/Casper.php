@@ -138,9 +138,11 @@ FRAGMENT;
      *
      * @return \Browser\Casper
      */
-    public function start($url)
+    public function start($url, $options = null)
     {
         $this->_clear();
+        $options['headers']['Accept'] = 'text/html';
+        $options = json_encode($options);
 
         $fragment = <<<FRAGMENT
 var casper = require('casper').create({
@@ -151,11 +153,7 @@ var casper = require('casper').create({
 
 casper.userAgent('$this->_userAgent');
 casper.start().then(function() {
-    this.open('$url', {
-        headers: {
-            'Accept': 'text/html'
-        }
-    });
+    this.open('$url', $options);
 });
 
 FRAGMENT;
