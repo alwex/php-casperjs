@@ -218,7 +218,6 @@ casper.then(function () {
     this.fillSelectors('$selector', $jsonData, $jsonSubmit);
 });
 FRAGMENT;
-        var_dump($jsonData);
 
         $this->_script .= $fragment;
 
