@@ -1,7 +1,7 @@
 php-casperjs
 ============
 
-php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate 
+php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate
 user testing against web pages.
 
 It is easy to integrate into PHPUnit test case.
@@ -36,13 +36,21 @@ $casper->setOptions(array(
 // navigate to google web page
 $casper->start('http://www.google.com');
 
-// fill the search form and submit it
+// fill the search form and submit it with input's name
 $casper->fillForm(
         'form[action="/search"]',
         array(
                 'q' => 'search'
         ),
         true);
+
+// or with javascript selectors:
+$casper->fillFormSelectors(
+        'form.form-class',
+        array(
+                'input#email-id' => 'user-email',
+                'input#password-id'   =>  'user-password'
+        ),true);
 
 // wait for 5 seconds (have a cofee)
 $casper->wait(5000);
@@ -66,7 +74,7 @@ $casper->capture(
     ),
     '/tmp/custom-capture.png'
 );
-        
+
 // click the first result
 $casper->click('h3.r a');
 
@@ -80,8 +88,8 @@ $casper->fillForm('#myForm', array(
 
 // get back to parent
 $casper->switchToParentFrame();
-        
-       
+
+
 // run the casper script
 $casper->run();
 
@@ -90,5 +98,5 @@ var_dump($casper->getRequestedUrls());
 
 // need to debug? just check the casper output
 var_dump($casper->getOutput());
-        
+
 ```
