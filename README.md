@@ -6,7 +6,7 @@ user testing against web pages.
 
 It is easy to integrate into PHPUnit test case.
 
-Making webcrawler has never been so easy !
+Making webcrawler has never been so easy!
 
 Installation
 ------------
@@ -28,7 +28,7 @@ use Browser\Casper;
 $casper = new Casper();
 
 // forward options to phantomJS
-// for exemple to ignore ssl errors
+// for example to ignore ssl errors
 $casper->setOptions(array(
     'ignore-ssl-errors' => 'yes'
 ));
@@ -52,7 +52,7 @@ $casper->fillFormSelectors(
                 'input#password-id'   =>  'user-password'
         ),true);
 
-// wait for 5 seconds (have a cofee)
+// wait for 5 seconds (have a coffee)
 $casper->wait(5000);
 
 // wait for text if needed for 3 seconds
@@ -86,14 +86,13 @@ $casper->fillForm('#myForm', array(
     'search' => 'my search',
 ));
 
-// get back to parent
+// go back to parent
 $casper->switchToParentFrame();
-
 
 // run the casper script
 $casper->run();
 
-// check the urls casper get throught
+// check the urls casper get through
 var_dump($casper->getRequestedUrls());
 
 // need to debug? just check the casper output
