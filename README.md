@@ -1,6 +1,8 @@
 php-casperjs
 ============
 
+[![Packagist](https://img.shields.io/packagist/dt/phpcasperjs/phpcasperjs.svg?maxAge=2592000)]()
+
 php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate
 user testing against web pages.
 
