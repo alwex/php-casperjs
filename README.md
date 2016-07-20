@@ -1,13 +1,6 @@
 php-casperjs
 ============
 
-[![Latest Version on Packagist][ico-version]][link-packagist]
-[![Software License][ico-license]](LICENSE)
-[![Build Status][ico-travis]][link-travis]
-[![Coverage Status][ico-scrutinizer]][link-scrutinizer]
-[![Quality Score][ico-code-quality]][link-code-quality]
-[![Total Downloads][ico-downloads]][link-downloads]
-
 php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate
 user testing against web pages.
 
