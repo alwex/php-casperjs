@@ -33,15 +33,17 @@ class Casper
     private $_temp_dir = '/tmp';
     private $_path2casper = '/usr/local/bin/'; //path to CasperJS
 
-    public function __construct($_path2casper = null, $_temp_dir = null){
-        if($_path2casper)
+    public function __construct($_path2casper = null, $_temp_dir = null)
+    {
+        if ($_path2casper)
             $this->_path2casper = $_path2casper;
-        if($_temp_dir)
+        if ($_temp_dir)
             $this->_temp_dir = $_temp_dir;
     }
 
     /**
      * Set the UserAgent
+     *
      * @param string $userAgent
      */
     public function setUserAgent($userAgent)
@@ -54,7 +56,8 @@ class Casper
     /**
      * enable debug logging into syslog
      *
-     * @param unknown $debug
+     * @param bool $debug
+     *
      * @return Casper
      */
     public function setDebug($debug)
@@ -103,6 +106,7 @@ FRAGMENT;
 
     /**
      * @param array $output
+     *
      * @return Casper
      */
     private function _setOutput($output)
@@ -134,7 +138,7 @@ FRAGMENT;
     /**
      * open the specified url
      *
-     * @param unknown $url
+     * @param string $url
      *
      * @return \Browser\Casper
      */
@@ -167,7 +171,9 @@ FRAGMENT;
 
     /**
      * Open URL after the initial opening
+     *
      * @param $url
+     *
      * @return $this
      */
     public function thenOpen($url)
@@ -186,9 +192,9 @@ FRAGMENT;
      * fill the form with the array of data
      * then submit it if submit is true
      *
-     * @param unknown $selector
-     * @param unknown $data
-     * @param string $submit
+     * @param string      $selector
+     * @param array       $data
+     * @param string|bool $submit
      *
      * @return \Browser\Casper
      */
@@ -228,8 +234,8 @@ FRAGMENT;
      * Sends native keyboard events
      * to the element matching the provided selector:
      *
-     * @param unknown $selector
-     * @param unknown $string
+     * @param string $selector
+     * @param string $string
      *
      * @return \Browser\Casper
      */
@@ -253,7 +259,7 @@ FRAGMENT;
      * wait until the text $text
      * appear on the page
      *
-     * @param string $text
+     * @param string  $text
      * @param integer $timeout
      *
      * @return \Browser\Casper
@@ -283,6 +289,7 @@ FRAGMENT;
      * wait until timeout
      *
      * @param number $timeout
+     *
      * @return \Browser\Casper
      */
     public function wait($timeout = 5000)
@@ -333,7 +340,7 @@ FRAGMENT;
 
     /**
      *
-     * @param unknown $selector
+     * @param string $selector
      *
      * @return \Browser\Casper
      */
@@ -380,7 +387,7 @@ FRAGMENT;
      * area defined by
      * array(top left width height)
      *
-     * @param array $area
+     * @param array  $area
      * @param string $filename
      *
      * @return \Browser\Casper
@@ -442,7 +449,8 @@ FRAGMENT;
     /**
      * switch to the child frame number $id
      *
-     * @param unknown $id
+     * @param string $id
+     *
      * @return \Browser\Casper
      */
     public function switchToChildFrame($id)
@@ -526,11 +534,11 @@ FRAGMENT;
         // options parsing
         $options = '';
         foreach ($this->_options as $option => $value) {
-            $options .= ' --'.$option.'='.$value;
+            $options .= ' --' . $option . '=' . $value;
         }
 
-        exec($this->_path2casper.'casperjs '.$filename.$options, $output);
-        if(empty($output))
+        exec($this->_path2casper . 'casperjs ' . $filename . $options, $output);
+        if (empty($output))
             throw new \Exception('Can not find CasperJS.');
 
         $this->_setOutput($output);
@@ -550,7 +558,11 @@ FRAGMENT;
     {
         foreach ($this->getOutput() as $outputLine) {
             if (strpos($outputLine, $this->_TAG_CURRENT_URL) !== false) {
-                $this->_currentUrl = str_replace($this->_TAG_CURRENT_URL, '', $outputLine);
+                $this->_currentUrl = str_replace(
+                    $this->_TAG_CURRENT_URL,
+                    '',
+                    $outputLine
+                );
             }
 
             if (strpos($outputLine, "Navigation requested: url=") !== false) {
@@ -561,14 +573,26 @@ FRAGMENT;
             }
 
             if ($this->isDebug()) {
-                syslog(LOG_INFO, '[PHP-CASPERJS] '.$outputLine);
+                syslog(LOG_INFO, '[PHP-CASPERJS] ' . $outputLine);
             }
-            if (strpos($outputLine, $this->_TAG_CURRENT_PAGE_CONTENT) !== false) {
-                $this->_current_page_content = str_replace($this->_TAG_CURRENT_PAGE_CONTENT, '', $outputLine);
+            if (strpos(
+                    $outputLine,
+                    $this->_TAG_CURRENT_PAGE_CONTENT
+                ) !== false
+            ) {
+                $this->_current_page_content = str_replace(
+                    $this->_TAG_CURRENT_PAGE_CONTENT,
+                    '',
+                    $outputLine
+                );
             }
 
             if (strpos($outputLine, $this->_TAG_CURRENT_HTML) !== false) {
-                $this->_current_html = str_replace($this->_TAG_CURRENT_HTML, '', $outputLine);
+                $this->_current_html = str_replace(
+                    $this->_TAG_CURRENT_HTML,
+                    '',
+                    $outputLine
+                );
             }
 
             if (strpos($outputLine, " steps in ") !== false) {
