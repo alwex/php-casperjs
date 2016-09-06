@@ -35,10 +35,12 @@ class Casper
 
     public function __construct($_path2casper = null, $_temp_dir = null)
     {
-        if ($_path2casper)
+        if ($_path2casper) {
             $this->_path2casper = $_path2casper;
-        if ($_temp_dir)
+        }
+        if ($_temp_dir) {
             $this->_temp_dir = $_temp_dir;
+        }
     }
 
     /**
@@ -484,7 +486,6 @@ FRAGMENT;
         $this->_script .= $fragment;
 
         return $this;
-
     }
 
 
@@ -538,8 +539,9 @@ FRAGMENT;
         }
 
         exec($this->_path2casper . 'casperjs ' . $filename . $options, $output);
-        if (empty($output))
+        if (empty($output)) {
             throw new \Exception('Can not find CasperJS.');
+        }
 
         $this->_setOutput($output);
         $this->_processOutput();
@@ -566,7 +568,6 @@ FRAGMENT;
             }
 
             if (strpos($outputLine, "Navigation requested: url=") !== false) {
-
                 $frag0 = explode('Navigation requested: url=', $outputLine);
                 $frag1 = explode(', type=', $frag0[1]);
                 $this->_requestedUrls[] = $frag1[0];
@@ -576,9 +577,9 @@ FRAGMENT;
                 syslog(LOG_INFO, '[PHP-CASPERJS] ' . $outputLine);
             }
             if (strpos(
-                    $outputLine,
-                    $this->_TAG_CURRENT_PAGE_CONTENT
-                ) !== false
+                $outputLine,
+                $this->_TAG_CURRENT_PAGE_CONTENT
+            ) !== false
             ) {
                 $this->_current_page_content = str_replace(
                     $this->_TAG_CURRENT_PAGE_CONTENT,
