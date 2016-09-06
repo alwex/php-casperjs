@@ -6,6 +6,10 @@ class CasperTest extends PHPUnit_Framework_TestCase
     public function testCreateInstance()
     {
         $casper = new Casper();
+        if (!file_exists($casper->getPath2Casper() .  'casperjs')) {
+            $casper->setPath2Casper('node_modules/casperjs/bin/');
+        }
+
         $this->assertInstanceOf('Browser\Casper', $casper);
     }
 

@@ -19,6 +19,7 @@ class Casper
     private $_TAG_CURRENT_HTML = '[CURRENT_HTML]';
 
     private $_debug = false;
+    private $_options = array();
     private $_script = '';
     private $_output = array();
     private $_requestedUrls = array();
@@ -44,6 +45,25 @@ class Casper
     }
 
     /**
+     * @param $path
+     * @return $this
+     */
+    public function setPath2Casper($path)
+    {
+        $this->_path2casper = $path;
+
+        return $this;
+    }
+
+    /**
+     * @return null|string
+     */
+    public function getPath2Casper()
+    {
+        return $this->_path2casper;
+    }
+
+    /**
      * Set the UserAgent
      *
      * @param string $userAgent
@@ -52,8 +72,6 @@ class Casper
     {
         $this->_userAgent = $userAgent;
     }
-
-    private $_options = array();
 
     /**
      * enable debug logging into syslog
@@ -194,8 +212,8 @@ FRAGMENT;
      * fill the form with the array of data
      * then submit it if submit is true
      *
-     * @param string      $selector
-     * @param array       $data
+     * @param string $selector
+     * @param array $data
      * @param string|bool $submit
      *
      * @return \Browser\Casper
@@ -261,7 +279,7 @@ FRAGMENT;
      * wait until the text $text
      * appear on the page
      *
-     * @param string  $text
+     * @param string $text
      * @param integer $timeout
      *
      * @return \Browser\Casper
@@ -389,7 +407,7 @@ FRAGMENT;
      * area defined by
      * array(top left width height)
      *
-     * @param array  $area
+     * @param array $area
      * @param string $filename
      *
      * @return \Browser\Casper
@@ -577,9 +595,9 @@ FRAGMENT;
                 syslog(LOG_INFO, '[PHP-CASPERJS] ' . $outputLine);
             }
             if (strpos(
-                $outputLine,
-                $this->_TAG_CURRENT_PAGE_CONTENT
-            ) !== false
+                    $outputLine,
+                    $this->_TAG_CURRENT_PAGE_CONTENT
+                ) !== false
             ) {
                 $this->_current_page_content = str_replace(
                     $this->_TAG_CURRENT_PAGE_CONTENT,
