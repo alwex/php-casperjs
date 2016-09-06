@@ -3,19 +3,25 @@ use Browser\Casper;
 
 class CasperTest extends PHPUnit_Framework_TestCase
 {
+    private static $casperBinPath = '/usr/local/bin/';
+
+    public static function setUpBeforeClass() {
+        if (!file_exists(self::$casperBinPath .  'casperjs')) {
+            self::$casperBinPath = 'node_modules/casperjs/bin/';
+        }
+    }
+
     public function testCreateInstance()
     {
-        $casper = new Casper();
-        if (!file_exists($casper->getPath2Casper() .  'casperjs')) {
-            $casper->setPath2Casper('node_modules/casperjs/bin/');
-        }
+        $casper = new Casper(self::$casperBinPath);
+
 
         $this->assertInstanceOf('Browser\Casper', $casper);
     }
 
     public function testStart_onGoogleSearchPage()
     {
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
 
         $casper->start('http://www.google.com');
         $casper->fillForm(
@@ -34,7 +40,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
 
     public function testStart_onGoogleSearchPageWithIgnoreSSLErrorOption()
     {
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
         $casper->setOptions(array(
                 'ignore-ssl-errors' => 'yes'
         ));
@@ -58,7 +64,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
     {
         $urls = array();
 
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
 
         $casper->start('http://www.google.com');
         $casper->fillForm(
@@ -76,7 +82,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
 
     public function testWaitForText()
     {
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
 
         $casper->start('http://www.google.com');
         $casper->fillForm(
@@ -97,7 +103,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
     {
         $startSecond = time();
 
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
 
         $casper->start('http://www.google.com');
         $casper->wait(3000);
@@ -110,7 +116,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
 
     public function testWaitForSelector()
     {
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
 
         $casper->start('http://www.google.com');
         $casper->fillForm(
@@ -131,7 +137,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
     {
         $filename = '/tmp/casperjs-test.png';
 
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
 
         $casper->start('http://www.google.com');
         $casper->captureSelector('#hplogo', $filename);
@@ -146,7 +152,7 @@ class CasperTest extends PHPUnit_Framework_TestCase
     {
         $filename = '/tmp/casperjs-test.png';
 
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
 
         $casper->start('http://www.google.com');
         $casper->capture(
@@ -186,7 +192,7 @@ HTML;
         $year = date('Y');
         $year++;
 
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
 
         $casper->start('file:///tmp/iframe1.html')
         ->switchToChildFrame(0)
@@ -241,14 +247,14 @@ TEXT;
 
         file_put_contents($filename, $evaluateHtml);
 
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
         $casper->start($filename)
             ->click('#theLink')
             ->run();
 
         $this->assertContains('google', $casper->getCurrentUrl());
 
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
         $casper->start($filename)
             ->evaluate('document.getElementById("theLink").href="http://www.yahoo.com";')
             ->click('#theLink')
@@ -283,7 +289,7 @@ TEXT;
         $filename = '/tmp/test-click.html';
         file_put_contents($filename, $evaluateHtml);
 
-        $casper = new Casper();
+        $casper = new Casper(self::$casperBinPath);
         $casper->start($filename)
             ->click("#theLink")
             ->run();
