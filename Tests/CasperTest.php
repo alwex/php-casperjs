@@ -250,7 +250,7 @@ TEXT;
             ->click('#theLink')
             ->run();
 
-        $this->assertContains('fr.yahoo.com', $casper->getCurrentUrl());
+        $this->assertContains('yahoo.com', $casper->getCurrentUrl());
 
         @unlink($filename);
     }
@@ -283,8 +283,6 @@ TEXT;
         $casper->start($filename)
             ->click("#theLink")
             ->run();
-
-        print_r($casper->getOutput());
 
         @unlink($filename);
     }
