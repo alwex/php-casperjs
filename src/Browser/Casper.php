@@ -595,9 +595,9 @@ FRAGMENT;
                 syslog(LOG_INFO, '[PHP-CASPERJS] ' . $outputLine);
             }
             if (strpos(
-                    $outputLine,
-                    $this->_TAG_CURRENT_PAGE_CONTENT
-                ) !== false
+                $outputLine,
+                $this->_TAG_CURRENT_PAGE_CONTENT
+            ) !== false
             ) {
                 $this->_current_page_content = str_replace(
                     $this->_TAG_CURRENT_PAGE_CONTENT,
