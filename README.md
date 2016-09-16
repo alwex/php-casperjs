@@ -1,6 +1,7 @@
 php-casperjs
 ============
 
+[![Travis branch](https://img.shields.io/travis/alwex/php-casperjs/stable.svg)]()
 [![Packagist](https://img.shields.io/packagist/dt/phpcasperjs/phpcasperjs.svg?maxAge=2592000)]()
 
 php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate
@@ -18,6 +19,17 @@ Before using php-casperjs, you need to install both library:
 1 - **PhantomJS** http://phantomjs.org/download.html
 
 2 - **CasperJS** http://casperjs.org/installation.html
+
+```shell
+npm install phantomjs
+npm install casperjs
+```
+
+then
+
+```shell
+composer require phpcasperjs/phpcasperjs
+```
 
 Usage
 -----
