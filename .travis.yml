@@ -9,4 +9,4 @@ php:
 install:
 - npm install phantomjs
 - npm install casperjs
-- composer installgit
+- composer install
