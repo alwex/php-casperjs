@@ -1,6 +1,7 @@
 php-casperjs
 ============
 
+[![Travis branch](https://img.shields.io/travis/alwex/php-casperjs/stable.svg)]()
 [![Packagist](https://img.shields.io/packagist/dt/phpcasperjs/phpcasperjs.svg?maxAge=2592000)]()
 
 php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate
