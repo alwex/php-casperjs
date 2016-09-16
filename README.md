@@ -20,6 +20,17 @@ Before using php-casperjs, you need to install both library:
 
 2 - **CasperJS** http://casperjs.org/installation.html
 
+```shell
+npm install phantomjs
+npm install casperjs
+```
+
+then
+
+```shell
+composer require phpcasperjs/phpcasperjs
+```
+
 Usage
 -----
 
