@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+TWGIT_STABLE='master'
