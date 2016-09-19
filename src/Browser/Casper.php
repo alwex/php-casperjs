@@ -63,6 +63,36 @@ class Casper
         return $this->path2casper;
     }
 
+        /**
+         * Set the Headers
+         *
+         * @param array $headers
+         */
+        public function setHeaders(array $headers)
+        {
+            $headersScript = "
+casper.page.customHeaders = {
+";
+            if (!empty($headers)) {
+                $headerLines = [];
+                foreach ($headers as $header => $value) {
+                    // Current version of casperjs will not decode gzipped output
+                    if ($header == 'Accept-Encoding') {
+                        continue;
+                    }
+                    $headerLine = "    '{$header}': '";
+                    $headerLine .= (is_array($value)) ? implode(',', $value) : $value;
+                    $headerLine .= "'";
+                    $headerLines[] = $headerLine;
+                }
+                $headersScript .= implode(",\n", $headerLines)."\n";
+            }
+            $headersScript .= "};";
+            $this->_script .= $headersScript;
+
+            return $this;
+        }
+
     /**
      * Set the UserAgent
      *
