@@ -4,6 +4,7 @@ php-casperjs
 [![Travis branch](https://img.shields.io/travis/alwex/php-casperjs/stable.svg)]()
 [![Packagist](https://img.shields.io/packagist/dt/phpcasperjs/phpcasperjs.svg?maxAge=2592000)]()
 [![Version](http://img.shields.io/packagist/v/phpcasperjs/phpcasperjs.svg?style=flat)](https://packagist.org/packages/phpcasperjs/phpcasperjs)
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
 
 php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate
 user testing against web pages.
