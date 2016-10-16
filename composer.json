@@ -22,6 +22,6 @@
         "squizlabs/php_codesniffer": "2.*"
     },
     "autoload": {
-        "psr-0": {"": "src/"}
+        "psr-4": {"Browser\\": "src/"}
     }
 }
