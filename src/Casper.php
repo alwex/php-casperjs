@@ -27,7 +27,6 @@ class Casper
     private $userAgent = 'casper';
     // default viewport values
     private $viewPortWidth = 1024;
-    private $viewPortHeight = 768;
     private $currentPageContent = '';
     private $currentHtml = '';
     private $loadTime = '';
@@ -120,7 +119,6 @@ casper.page.customHeaders = {
     public function setViewPort($width, $height)
     {
         $this->viewPortWidth = $width;
-        $this->viewPortHeight = $height;
 
         $fragment = <<<FRAGMENT
 casper.then(function () {

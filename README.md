@@ -6,6 +6,8 @@ php-casperjs
 [![Version](http://img.shields.io/packagist/v/phpcasperjs/phpcasperjs.svg?style=flat)](https://packagist.org/packages/phpcasperjs/phpcasperjs)
 [![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/64289c40-f11c-49ef-b295-2e7ec784d64a/big.png)](https://insight.sensiolabs.com/projects/64289c40-f11c-49ef-b295-2e7ec784d64a)
+
 php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate
 user testing against web pages.
 
