@@ -3,6 +3,10 @@ php-casperjs
 
 [![Travis branch](https://img.shields.io/travis/alwex/php-casperjs/stable.svg)]()
 [![Packagist](https://img.shields.io/packagist/dt/phpcasperjs/phpcasperjs.svg?maxAge=2592000)]()
+[![Version](http://img.shields.io/packagist/v/phpcasperjs/phpcasperjs.svg?style=flat)](https://packagist.org/packages/phpcasperjs/phpcasperjs)
+[![License](http://img.shields.io/:license-mit-blue.svg)](http://doge.mit-license.org)
+
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/64289c40-f11c-49ef-b295-2e7ec784d64a/big.png)](https://insight.sensiolabs.com/projects/64289c40-f11c-49ef-b295-2e7ec784d64a)
 
 php-casperjs is a simple PHP wrapper for the fine library CasperJS designed to automate
 user testing against web pages.
@@ -18,7 +22,7 @@ Before using php-casperjs, you need to install both library:
 
 1 - **PhantomJS** http://phantomjs.org/download.html
 
-2 - **CasperJS** http://casperjs.org/installation.html
+2 - **CasperJS** http://docs.casperjs.org/en/latest/installation.html
 
 ```shell
 npm install phantomjs
