@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<ruleset name="php-casperjs">
-    <description>The coding standard for php-casperjs.</description>
-
-    <file>src</file>
-
-    <rule ref="PSR2"/>
-</ruleset>
