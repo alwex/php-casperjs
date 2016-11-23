@@ -39,6 +39,26 @@ class CasperTest extends PHPUnit_Framework_TestCase
         $this->assertNotNull($casper->getCurrentUrl());
     }
 
+    public function testStart_onGoogleSearchPageWithSlimerJS()
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => 'slimerjs']);
+        $casper->start('http://www.google.com');
+        $casper->fillForm(
+            'form[action="/search"]',
+            array(
+                'q' => 'search'
+            ),
+            true);
+        $casper->click('h3.r a');
+        $casper->run();
+
+        $this->assertTrue(is_array($casper->getOutput()));
+        $this->assertTrue(sizeof($casper->getOutput()) > 0);
+        $this->assertNotNull($casper->getCurrentUrl());
+    }
+
     public function testStart_onGoogleSearchPageWithIgnoreSSLErrorOption()
     {
         $casper = new Casper(self::$casperBinPath);
