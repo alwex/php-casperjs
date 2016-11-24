@@ -195,6 +195,7 @@ FRAGMENT;
         $this->clear();
 
         $fragment = <<<FRAGMENT
+var xpath = require('casper').selectXPath;
 var casper = require('casper').create({
     verbose: true,
     logLevel: 'debug',
