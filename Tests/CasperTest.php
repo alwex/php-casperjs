@@ -318,4 +318,24 @@ TEXT;
 
         @unlink($filename);
     }
+
+    public function testInjectCustomScript()
+    {
+        $casper = new Casper(self::$casperBinPath);
+        $casper->start('about:blank')
+            ->addToScript(<<<FRAGMENT
+casper.log('ABCDEFGH');
+FRAGMENT
+            )
+            ->run();
+
+        $found = false;
+        foreach ($casper->getOutput() as $logLine) {
+            if (preg_match('/ABCDEFGH/', $logLine)) {
+                $found = true;
+            }
+        }
+
+        $this->assertTrue($found);
+    }
 }

@@ -520,7 +520,10 @@ FRAGMENT;
         return $this;
     }
 
-
+    /**
+     * @param $function
+     * @return $this
+     */
     public function evaluate($function)
     {
         $fragment = <<<FRAGMENT
@@ -530,6 +533,21 @@ casper.then(function() {
     });
 });
 
+FRAGMENT;
+
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
+    /**
+     * @param $js
+     * @return $this
+     */
+    public function addToScript($js)
+    {
+        $fragment = <<<FRAGMENT
+$js
 FRAGMENT;
 
         $this->script .= $fragment;
