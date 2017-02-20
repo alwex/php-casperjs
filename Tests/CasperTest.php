@@ -5,8 +5,9 @@ class CasperTest extends PHPUnit_Framework_TestCase
 {
     private static $casperBinPath = '/usr/local/bin/';
 
-    public static function setUpBeforeClass() {
-        if (!file_exists(self::$casperBinPath .  'casperjs')) {
+    public static function setUpBeforeClass()
+    {
+        if (!file_exists(self::$casperBinPath . 'casperjs')) {
             self::$casperBinPath = 'node_modules/casperjs/bin/';
         }
     }
@@ -25,11 +26,31 @@ class CasperTest extends PHPUnit_Framework_TestCase
 
         $casper->start('http://www.google.com');
         $casper->fillForm(
-                'form[action="/search"]',
-                array(
-                        'q' => 'search'
-                ),
-                true);
+            'form[action="/search"]',
+            array(
+                'q' => 'search'
+            ),
+            true);
+        $casper->click('h3.r a');
+        $casper->run();
+
+        $this->assertTrue(is_array($casper->getOutput()));
+        $this->assertTrue(sizeof($casper->getOutput()) > 0);
+        $this->assertNotNull($casper->getCurrentUrl());
+    }
+
+    public function testStart_onGoogleSearchPageWithSlimerJS()
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => 'slimerjs']);
+        $casper->start('http://www.google.com');
+        $casper->fillForm(
+            'form[action="/search"]',
+            array(
+                'q' => 'search'
+            ),
+            true);
         $casper->click('h3.r a');
         $casper->run();
 
@@ -42,16 +63,16 @@ class CasperTest extends PHPUnit_Framework_TestCase
     {
         $casper = new Casper(self::$casperBinPath);
         $casper->setOptions(array(
-                'ignore-ssl-errors' => 'yes'
+            'ignore-ssl-errors' => 'yes'
         ));
 
         $casper->start('http://www.google.com');
         $casper->fillForm(
-                'form[action="/search"]',
-                array(
-                        'q' => 'search'
-                ),
-                true);
+            'form[action="/search"]',
+            array(
+                'q' => 'search'
+            ),
+            true);
         $casper->click('h3.r a');
         $casper->run();
 
@@ -68,11 +89,11 @@ class CasperTest extends PHPUnit_Framework_TestCase
 
         $casper->start('http://www.google.com');
         $casper->fillForm(
-                'form[action="/search"]',
-                array(
-                        'q' => 'search'
-                ),
-                true);
+            'form[action="/search"]',
+            array(
+                'q' => 'search'
+            ),
+            true);
         $casper->click('h3.r a');
         $casper->run();
 
@@ -86,11 +107,11 @@ class CasperTest extends PHPUnit_Framework_TestCase
 
         $casper->start('http://www.google.com');
         $casper->fillForm(
-                'form[action="/search"]',
-                array(
-                        'q' => 'search'
-                ),
-                true);
+            'form[action="/search"]',
+            array(
+                'q' => 'search'
+            ),
+            true);
         $casper->waitForText('Yahoo', 20000);
         $casper->click('h3.r a');
         $casper->run();
@@ -120,11 +141,11 @@ class CasperTest extends PHPUnit_Framework_TestCase
 
         $casper->start('http://www.google.com');
         $casper->fillForm(
-                'form[action="/search"]',
-                array(
-                        'q' => 'search'
-                ),
-                true);
+            'form[action="/search"]',
+            array(
+                'q' => 'search'
+            ),
+            true);
         $casper->waitForSelector('.gbqfb', 2000);
         $casper->click('h3.r a');
         $casper->run();
@@ -156,13 +177,13 @@ class CasperTest extends PHPUnit_Framework_TestCase
 
         $casper->start('http://www.google.com');
         $casper->capture(
-                array(
-                        'top' => 0,
-                        'left' => 0,
-                        'width' => 800,
-                        'height' => 600
-                ),
-                $filename
+            array(
+                'top' => 0,
+                'left' => 0,
+                'width' => 800,
+                'height' => 600
+            ),
+            $filename
         );
         $casper->run();
 
@@ -171,8 +192,9 @@ class CasperTest extends PHPUnit_Framework_TestCase
         $this->assertFileNotExists($filename);
     }
 
-    public function testSwitchToChildFrame() {
-        $html =<<< HTML
+    public function testSwitchToChildFrame()
+    {
+        $html = <<< HTML
 <!DOCTYPE html>
 <html>
     <head>
@@ -195,24 +217,24 @@ HTML;
         $casper = new Casper(self::$casperBinPath);
 
         $casper->start('file:///tmp/iframe1.html')
-        ->switchToChildFrame(0)
-        ->fillForm('#tokenizerForm', array(
+            ->switchToChildFrame(0)
+            ->fillForm('#tokenizerForm', array(
                 'tokenizerForm\:cardNumber' => 'testing',
                 'tokenizerForm\:cardHolder' => 'Jean Valjean',
                 'tokenizerForm\:cardExpiryYear' => $year,
                 'tokenizerForm\:cardSecurityCode' => '123',
-        ))
-        ->switchToParentFrame()
-        ->capture(
+            ))
+            ->switchToParentFrame()
+            ->capture(
                 array(
-                        'top' => 0,
-                        'left' => 0,
-                        'width' => 800,
-                        'height' => 600
+                    'top' => 0,
+                    'left' => 0,
+                    'width' => 800,
+                    'height' => 600
                 ),
                 '/tmp/testage.png'
-        )
-        ->run();
+            )
+            ->run();
 
         $found = false;
         foreach ($casper->getOutput() as $logLine) {
@@ -231,7 +253,7 @@ HTML;
 
     public function testEvaluate()
     {
-        $evaluateHtml =<<<TEXT
+        $evaluateHtml = <<<TEXT
 <!DOCTYPE html>
 <html>
     <head>
@@ -267,7 +289,7 @@ TEXT;
 
     public function testDoubleClick()
     {
-        $evaluateHtml =<<<TEXT
+        $evaluateHtml = <<<TEXT
 <!DOCTYPE html>
 <html>
     <head>
@@ -295,5 +317,25 @@ TEXT;
             ->run();
 
         @unlink($filename);
+    }
+
+    public function testInjectCustomScript()
+    {
+        $casper = new Casper(self::$casperBinPath);
+        $casper->start('about:blank')
+            ->addToScript(<<<FRAGMENT
+casper.log('ABCDEFGH');
+FRAGMENT
+            )
+            ->run();
+
+        $found = false;
+        foreach ($casper->getOutput() as $logLine) {
+            if (preg_match('/ABCDEFGH/', $logLine)) {
+                $found = true;
+            }
+        }
+
+        $this->assertTrue($found);
     }
 }

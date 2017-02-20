@@ -47,9 +47,9 @@ $casper = new Casper();
 
 // forward options to phantomJS
 // for example to ignore ssl errors
-$casper->setOptions(array(
+$casper->setOptions([
     'ignore-ssl-errors' => 'yes'
-));
+]);
 
 // navigate to google web page
 $casper->start('http://www.google.com');
@@ -116,4 +116,11 @@ var_dump($casper->getRequestedUrls());
 // need to debug? just check the casper output
 var_dump($casper->getOutput());
 
+```
+
+If you want to see your crawler in action, set the engine to slimerjs
+
+```php
+$casper = new Casper();
+$casper->setOptions(['engine' => 'slimerjs']);
 ```

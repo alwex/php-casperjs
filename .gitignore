@@ -1,3 +1,5 @@
 vendor
 .twgit_features_subject
 /.idea/
+
+bin/*
