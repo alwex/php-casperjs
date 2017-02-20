@@ -4,12 +4,7 @@ namespace Browser;
 /**
  * CasperJS wrapper
  *
- * installation:
- * 1 - install phantomJS: http://phantomjs.org/download.html
- * 2 - install CasperJS: http://casperjs.org/installation.html
- *
  * @author aguidet
- *
  */
 class Casper
 {
@@ -62,35 +57,34 @@ class Casper
         return $this->path2casper;
     }
 
-        /**
-         * Set the Headers
-         *
-         * @param array $headers
-         */
-        public function setHeaders(array $headers)
-        {
-            $headersScript = "
+    /**
+     * @param array $headers
+     * @return $this
+     */
+    public function setHeaders(array $headers)
+    {
+        $headersScript = "
 casper.page.customHeaders = {
 ";
-            if (!empty($headers)) {
-                $headerLines = [];
-                foreach ($headers as $header => $value) {
-                    // Current version of casperjs will not decode gzipped output
-                    if ($header == 'Accept-Encoding') {
-                        continue;
-                    }
-                    $headerLine = "    '{$header}': '";
-                    $headerLine .= (is_array($value)) ? implode(',', $value) : $value;
-                    $headerLine .= "'";
-                    $headerLines[] = $headerLine;
+        if (!empty($headers)) {
+            $headerLines = [];
+            foreach ($headers as $header => $value) {
+                // Current version of casperjs will not decode gzipped output
+                if ($header == 'Accept-Encoding') {
+                    continue;
                 }
-                $headersScript .= implode(",\n", $headerLines)."\n";
+                $headerLine = "    '{$header}': '";
+                $headerLine .= (is_array($value)) ? implode(',', $value) : $value;
+                $headerLine .= "'";
+                $headerLines[] = $headerLine;
             }
-            $headersScript .= "};";
-            $this->_script .= $headersScript;
-
-            return $this;
+            $headersScript .= implode(",\n", $headerLines) . "\n";
         }
+        $headersScript .= "};";
+        $this->_script .= $headersScript;
+
+        return $this;
+    }
 
     /**
      * Set the UserAgent
@@ -334,11 +328,8 @@ FRAGMENT;
     }
 
     /**
-     * wait until timeout
-     *
-     * @param number $timeout
-     *
-     * @return \Browser\Casper
+     * @param int $timeout
+     * @return $this
      */
     public function wait($timeout = 5000)
     {
@@ -358,12 +349,9 @@ FRAGMENT;
     }
 
     /**
-     * wait until the text $text
-     * appear on the page
-     *
-     * @param string $text
-     *
-     * @return \Browser\Casper
+     * @param $selector
+     * @param int $timeout
+     * @return $this
      */
     public function waitForSelector($selector, $timeout = 5000)
     {
@@ -387,10 +375,8 @@ FRAGMENT;
     }
 
     /**
-     *
-     * @param string $selector
-     *
-     * @return \Browser\Casper
+     * @param $selector
+     * @return $this
      */
     public function click($selector)
     {
@@ -413,7 +399,7 @@ FRAGMENT;
      * @param string $selector
      * @param string $filename
      *
-     * @return \Browser\Casper
+     * @return $this
      */
     public function captureSelector($selector, $filename)
     {
@@ -438,7 +424,7 @@ FRAGMENT;
      * @param array $area
      * @param string $filename
      *
-     * @return \Browser\Casper
+     * @return $this
      */
     public function capture(array $area, $filename)
     {
@@ -471,7 +457,7 @@ FRAGMENT;
      *
      * @param string $filename
      *
-     * @return \Browser\Casper
+     * @return $this
      */
     public function capturePage($filename)
     {
@@ -499,7 +485,7 @@ FRAGMENT;
      *
      * @param string $id
      *
-     * @return \Browser\Casper
+     * @return $this
      */
     public function switchToChildFrame($id)
     {
@@ -518,7 +504,7 @@ FRAGMENT;
     /**
      * get back to parent frame
      *
-     * @return \Browser\Casper
+     * @return $this
      */
     public function switchToParentFrame()
     {
@@ -534,7 +520,10 @@ FRAGMENT;
         return $this;
     }
 
-
+    /**
+     * @param $function
+     * @return $this
+     */
     public function evaluate($function)
     {
         $fragment = <<<FRAGMENT
@@ -552,10 +541,26 @@ FRAGMENT;
     }
 
     /**
+     * @param $js
+     * @return $this
+     */
+    public function addToScript($js)
+    {
+        $fragment = <<<FRAGMENT
+$js
+FRAGMENT;
+
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
+    /**
      * run the casperJS script and return the stdOut
      * in using the output variable
      *
      * @return array
+     * @throws \Exception
      */
     public function run()
     {
