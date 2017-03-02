@@ -81,7 +81,7 @@ casper.page.customHeaders = {
             $headersScript .= implode(",\n", $headerLines) . "\n";
         }
         $headersScript .= "};";
-        $this->_script .= $headersScript;
+        $this->script .= $headersScript;
 
         return $this;
     }
