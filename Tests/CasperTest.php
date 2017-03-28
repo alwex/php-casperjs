@@ -370,4 +370,22 @@ FRAGMENT
         $this->assertContains('Content-Type', $keys);
         $this->assertContains('Cache-Control', $keys);
     }
+
+    /**
+     * @dataProvider getEngines
+     * @param string $engine
+     */
+    public function testGetStatus($engine)
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => $engine]);
+
+        $casper->start('https://www.w3.org/');
+        $casper->run();
+
+        $status = $casper->getStatus();
+
+        $this->assertSame(200, $status);
+    }
 }
