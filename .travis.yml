@@ -17,3 +17,6 @@ notifications:
 
 addons:
   firefox: latest
+
+env:
+  - SLIMERJSLAUNCHER=$HOME/firefox-latest/firefox/firefox
