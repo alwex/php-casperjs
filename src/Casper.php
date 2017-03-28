@@ -674,7 +674,7 @@ FRAGMENT;
             }
 
             if (0 === strpos($outputLine, $this->TAG_CURRENT_STATUS_TEXT)) {
-                $this->statusText = str_replace($this->TAG_CURRENT_STATUS_TEXT, '', $outputLine);
+                $this->statusText = trim(str_replace($this->TAG_CURRENT_STATUS_TEXT, '', $outputLine));
             }
 
             if (0 === strpos($outputLine, $this->TAG_CURRENT_COOKIES)) {
