@@ -15,6 +15,7 @@ class Casper
     private $TAG_CURRENT_HEADERS = '[CURRENT_HEADERS]';
     private $TAG_CURRENT_STATUS = '[CURRENT_STATUS]';
     private $TAG_CURRENT_STATUS_TEXT = '[CURRENT_STATUS_TEXT]';
+    private $TAG_CURRENT_COOKIES = '[CURRENT_COOKIES]';
 
     private $debug = false;
     private $options = array();
@@ -33,6 +34,7 @@ class Casper
     private $headers = [];
     private $status;
     private $statusText = '';
+    private $cookies = [];
 
     public function __construct($path2casper = null, $tempDir = null)
     {
@@ -582,6 +584,7 @@ casper.then(function () {
     this.echo('$this->TAG_CURRENT_HEADERS' + JSON.stringify(this.currentResponse.headers));
     this.echo('$this->TAG_CURRENT_STATUS' + this.currentResponse.status);
     this.echo('$this->TAG_CURRENT_STATUS_TEXT' + this.currentResponse.statusText);
+    this.echo('$this->TAG_CURRENT_COOKIES' + JSON.stringify(phantom.cookies));
 });
 
 casper.run();
@@ -673,6 +676,10 @@ FRAGMENT;
             if (0 === strpos($outputLine, $this->TAG_CURRENT_STATUS_TEXT)) {
                 $this->statusText = str_replace($this->TAG_CURRENT_STATUS_TEXT, '', $outputLine);
             }
+
+            if (0 === strpos($outputLine, $this->TAG_CURRENT_COOKIES)) {
+                $this->cookies = json_decode(str_replace($this->TAG_CURRENT_COOKIES, '', $outputLine), true);
+            }
         }
     }
 
@@ -723,5 +730,13 @@ FRAGMENT;
     public function getStatusText()
     {
         return $this->statusText;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCookies()
+    {
+        return $this->cookies;
     }
 }

@@ -406,4 +406,35 @@ FRAGMENT
 
         $this->assertSame('OK', $statusText);
     }
+
+    /**
+     * @dataProvider getEngines
+     * @param string $engine
+     */
+    public function testGetCookies($engine)
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => $engine]);
+
+        $casper->start('https://twitter.com');
+        $casper->run();
+
+        $cookies = $casper->getCookies();
+
+        $firstCookie = reset($cookies);
+
+        $domains = array_unique(array_column($cookies, 'domain'));
+
+        $this->assertArrayHasKey('domain', $firstCookie);
+        $this->assertArrayHasKey('expires', $firstCookie);
+        $this->assertArrayHasKey('expiry', $firstCookie);
+        $this->assertArrayHasKey('httponly', $firstCookie);
+        $this->assertArrayHasKey('name', $firstCookie);
+        $this->assertArrayHasKey('path', $firstCookie);
+        $this->assertArrayHasKey('secure', $firstCookie);
+        $this->assertArrayHasKey('value', $firstCookie);
+
+        $this->assertContains('.twitter.com', $domains);
+    }
 }
