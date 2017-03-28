@@ -9,6 +9,7 @@ php:
 install:
   - npm install phantomjs
   - npm install casperjs
+  - npm install slimerjs
   - composer install
 
 notifications:
