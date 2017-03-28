@@ -422,7 +422,7 @@ FRAGMENT
 
         $cookies = $casper->getCookies();
 
-        $firstCookie = reset($cookies);
+        $firstCookie = call_user_func_array('array_merge', $cookies);
 
         $domains = array_unique(array_column($cookies, 'domain'));
 
