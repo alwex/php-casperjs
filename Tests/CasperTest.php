@@ -338,4 +338,103 @@ FRAGMENT
 
         $this->assertTrue($found);
     }
+
+    /**
+     * @return array
+     */
+    public function getEngines()
+    {
+        return [
+            ['phantomjs'],
+            ['slimerjs'],
+        ];
+    }
+
+    /**
+     * @dataProvider getEngines
+     * @param string $engine
+     */
+    public function testHeaders($engine)
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => $engine]);
+
+        $casper->start('http://www.google.com');
+        $casper->run();
+
+        $headers = $casper->getHeaders();
+        $keys = array_column($headers, 'name');
+
+        $this->assertContains('Date', $keys);
+        $this->assertContains('Content-Type', $keys);
+        $this->assertContains('Cache-Control', $keys);
+    }
+
+    /**
+     * @dataProvider getEngines
+     * @param string $engine
+     */
+    public function testGetStatus($engine)
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => $engine]);
+
+        $casper->start('https://www.w3.org/');
+        $casper->run();
+
+        $status = $casper->getStatus();
+
+        $this->assertSame(200, $status);
+    }
+
+    /**
+     * @dataProvider getEngines
+     * @param string $engine
+     */
+    public function testGetStatusText($engine)
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => $engine]);
+
+        $casper->start('https://www.w3.org/');
+        $casper->run();
+
+        $statusText = $casper->getStatusText();
+
+        $this->assertSame('OK', $statusText);
+    }
+
+    /**
+     * @dataProvider getEngines
+     * @param string $engine
+     */
+    public function testGetCookies($engine)
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => $engine]);
+
+        $casper->start('https://twitter.com');
+        $casper->run();
+
+        $cookies = $casper->getCookies();
+
+        $firstCookie = reset($cookies);
+
+        $domains = array_unique(array_column($cookies, 'domain'));
+
+        $this->assertArrayHasKey('domain', $firstCookie);
+        $this->assertArrayHasKey('expires', $firstCookie);
+        $this->assertArrayHasKey('expiry', $firstCookie);
+        $this->assertArrayHasKey('httponly', $firstCookie);
+        $this->assertArrayHasKey('name', $firstCookie);
+        $this->assertArrayHasKey('path', $firstCookie);
+        $this->assertArrayHasKey('secure', $firstCookie);
+        $this->assertArrayHasKey('value', $firstCookie);
+
+        $this->assertContains('.twitter.com', $domains);
+    }
 }
