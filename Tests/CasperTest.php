@@ -388,4 +388,22 @@ FRAGMENT
 
         $this->assertSame(200, $status);
     }
+
+    /**
+     * @dataProvider getEngines
+     * @param string $engine
+     */
+    public function testGetStatusText($engine)
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => $engine]);
+
+        $casper->start('https://www.w3.org/');
+        $casper->run();
+
+        $statusText = $casper->getStatusText();
+
+        $this->assertSame('OK', $statusText);
+    }
 }

@@ -14,6 +14,7 @@ class Casper
     private $TAG_CURRENT_HTML = '[CURRENT_HTML]';
     private $TAG_CURRENT_HEADERS = '[CURRENT_HEADERS]';
     private $TAG_CURRENT_STATUS = '[CURRENT_STATUS]';
+    private $TAG_CURRENT_STATUS_TEXT = '[CURRENT_STATUS_TEXT]';
 
     private $debug = false;
     private $options = array();
@@ -31,6 +32,7 @@ class Casper
     private $path2casper = '/usr/local/bin/'; //path to CasperJS
     private $headers = [];
     private $status;
+    private $statusText = '';
 
     public function __construct($path2casper = null, $tempDir = null)
     {
@@ -579,6 +581,7 @@ casper.then(function () {
     this.echo('$this->TAG_CURRENT_HTML' + this.getHTML().replace(new RegExp('\\r?\\n','g'), ''));
     this.echo('$this->TAG_CURRENT_HEADERS' + JSON.stringify(this.currentResponse.headers));
     this.echo('$this->TAG_CURRENT_STATUS' + this.currentResponse.status);
+    this.echo('$this->TAG_CURRENT_STATUS_TEXT' + this.currentResponse.statusText);
 });
 
 casper.run();
@@ -666,6 +669,10 @@ FRAGMENT;
             if (0 === strpos($outputLine, $this->TAG_CURRENT_STATUS)) {
                 $this->status = (int) str_replace($this->TAG_CURRENT_STATUS, '', $outputLine);
             }
+
+            if (0 === strpos($outputLine, $this->TAG_CURRENT_STATUS_TEXT)) {
+                $this->statusText = str_replace($this->TAG_CURRENT_STATUS_TEXT, '', $outputLine);
+            }
         }
     }
 
@@ -708,5 +715,13 @@ FRAGMENT;
     public function getStatus()
     {
         return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusText()
+    {
+        return $this->statusText;
     }
 }
