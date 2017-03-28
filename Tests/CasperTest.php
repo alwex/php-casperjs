@@ -338,4 +338,36 @@ FRAGMENT
 
         $this->assertTrue($found);
     }
+
+    /**
+     * @return array
+     */
+    public function getEngines()
+    {
+        return [
+            ['phantomjs'],
+            ['slimerjs'],
+        ];
+    }
+
+    /**
+     * @dataProvider getEngines
+     * @param string $engine
+     */
+    public function testHeaders($engine)
+    {
+        $casper = new Casper(self::$casperBinPath);
+
+        $casper->setOptions(['engine' => $engine]);
+
+        $casper->start('http://www.google.com');
+        $casper->run();
+
+        $headers = $casper->getHeaders();
+        $keys = array_column($headers, 'name');
+
+        $this->assertContains('Date', $keys);
+        $this->assertContains('Content-Type', $keys);
+        $this->assertContains('Cache-Control', $keys);
+    }
 }

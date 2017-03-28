@@ -12,6 +12,7 @@ class Casper
     private $TAG_CURRENT_TITLE = '[CURRENT_TITLE]';
     private $TAG_CURRENT_PAGE_CONTENT = '[CURRENT_PAGE_CONTENT]';
     private $TAG_CURRENT_HTML = '[CURRENT_HTML]';
+    private $TAG_CURRENT_HEADERS = '[CURRENT_HEADERS]';
 
     private $debug = false;
     private $options = array();
@@ -27,6 +28,7 @@ class Casper
     private $loadTime = '';
     private $tempDir = '/tmp';
     private $path2casper = '/usr/local/bin/'; //path to CasperJS
+    private $headers = [];
 
     public function __construct($path2casper = null, $tempDir = null)
     {
@@ -573,6 +575,7 @@ casper.then(function () {
     this.echo('$this->TAG_CURRENT_TITLE' + this.getTitle());
     this.echo('$this->TAG_CURRENT_PAGE_CONTENT' + this.getPageContent().replace(new RegExp('\\r?\\n','g'), ''));
     this.echo('$this->TAG_CURRENT_HTML' + this.getHTML().replace(new RegExp('\\r?\\n','g'), ''));
+    this.echo('$this->TAG_CURRENT_HEADERS' + JSON.stringify(this.currentResponse.headers));
 });
 
 casper.run();
@@ -652,6 +655,10 @@ FRAGMENT;
                 $frag = explode(' steps in ', $outputLine);
                 $this->loadTime = $frag[1];
             }
+
+            if (0 === strpos($outputLine, $this->TAG_CURRENT_HEADERS)) {
+                $this->headers = json_decode(str_replace($this->TAG_CURRENT_HEADERS, '', $outputLine), true);
+            }
         }
     }
 
@@ -678,5 +685,13 @@ FRAGMENT;
     public function getLoadTime()
     {
         return $this->loadTime;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
     }
 }
