@@ -12,6 +12,10 @@ class Casper
     private $TAG_CURRENT_TITLE = '[CURRENT_TITLE]';
     private $TAG_CURRENT_PAGE_CONTENT = '[CURRENT_PAGE_CONTENT]';
     private $TAG_CURRENT_HTML = '[CURRENT_HTML]';
+    private $TAG_CURRENT_HEADERS = '[CURRENT_HEADERS]';
+    private $TAG_CURRENT_STATUS = '[CURRENT_STATUS]';
+    private $TAG_CURRENT_STATUS_TEXT = '[CURRENT_STATUS_TEXT]';
+    private $TAG_CURRENT_COOKIES = '[CURRENT_COOKIES]';
 
     private $debug = false;
     private $options = array();
@@ -27,6 +31,10 @@ class Casper
     private $loadTime = '';
     private $tempDir = '/tmp';
     private $path2casper = '/usr/local/bin/'; //path to CasperJS
+    private $headers = [];
+    private $status;
+    private $statusText = '';
+    private $cookies = [];
 
     public function __construct($path2casper = null, $tempDir = null)
     {
@@ -573,6 +581,10 @@ casper.then(function () {
     this.echo('$this->TAG_CURRENT_TITLE' + this.getTitle());
     this.echo('$this->TAG_CURRENT_PAGE_CONTENT' + this.getPageContent().replace(new RegExp('\\r?\\n','g'), ''));
     this.echo('$this->TAG_CURRENT_HTML' + this.getHTML().replace(new RegExp('\\r?\\n','g'), ''));
+    this.echo('$this->TAG_CURRENT_HEADERS' + JSON.stringify(this.currentResponse.headers));
+    this.echo('$this->TAG_CURRENT_STATUS' + this.currentResponse.status);
+    this.echo('$this->TAG_CURRENT_STATUS_TEXT' + this.currentResponse.statusText);
+    this.echo('$this->TAG_CURRENT_COOKIES' + JSON.stringify(phantom.cookies));
 });
 
 casper.run();
@@ -652,6 +664,22 @@ FRAGMENT;
                 $frag = explode(' steps in ', $outputLine);
                 $this->loadTime = $frag[1];
             }
+
+            if (0 === strpos($outputLine, $this->TAG_CURRENT_HEADERS)) {
+                $this->headers = json_decode(str_replace($this->TAG_CURRENT_HEADERS, '', $outputLine), true);
+            }
+
+            if (0 === strpos($outputLine, $this->TAG_CURRENT_STATUS)) {
+                $this->status = (int) str_replace($this->TAG_CURRENT_STATUS, '', $outputLine);
+            }
+
+            if (0 === strpos($outputLine, $this->TAG_CURRENT_STATUS_TEXT)) {
+                $this->statusText = trim(str_replace($this->TAG_CURRENT_STATUS_TEXT, '', $outputLine));
+            }
+
+            if (0 === strpos($outputLine, $this->TAG_CURRENT_COOKIES)) {
+                $this->cookies = json_decode(str_replace($this->TAG_CURRENT_COOKIES, '', $outputLine), true);
+            }
         }
     }
 
@@ -678,5 +706,37 @@ FRAGMENT;
     public function getLoadTime()
     {
         return $this->loadTime;
+    }
+
+    /**
+     * @return array
+     */
+    public function getHeaders()
+    {
+        return $this->headers;
+    }
+
+    /**
+     * @return int
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatusText()
+    {
+        return $this->statusText;
+    }
+
+    /**
+     * @return array
+     */
+    public function getCookies()
+    {
+        return $this->cookies;
     }
 }
