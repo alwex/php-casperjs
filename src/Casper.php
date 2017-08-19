@@ -39,7 +39,7 @@ class Casper
     public function __construct($path2casper = null, $tempDir = null)
     {
         if ($path2casper) {
-            $this->path2casper = $path2casper;
+            $this->setPath2Casper($path2casper);
         }
         if ($tempDir) {
             $this->tempDir = $tempDir;
@@ -52,7 +52,7 @@ class Casper
      */
     public function setPath2Casper($path)
     {
-        $this->path2casper = $path;
+        $this->path2casper = escapeshellarg($path);
 
         return $this;
     }
