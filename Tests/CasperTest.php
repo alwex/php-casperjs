@@ -194,6 +194,23 @@ class CasperTest extends PHPUnit_Framework_TestCase
 
     public function testSwitchToChildFrame()
     {
+        $htmlIframe = <<< IFRAME
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>iframe 2</title>
+    </head>
+    <body>
+        <form id="form">
+            <input name="field1" type="text" />
+            <input name="field2" type="text" />
+            <input name="field3" type="text" />
+            <input name="field4" type="text" />
+        </form>
+    </body>
+IFRAME;
+
         $html = <<< HTML
 <!DOCTYPE html>
 <html>
@@ -202,27 +219,26 @@ class CasperTest extends PHPUnit_Framework_TestCase
     <title>iframe 1</title>
     </head>
     <body>
-        <iframe name="myiframe" src="https://psp.hipay.com/HiMediaPSP-war/Token.xhtml?p=MXPrDJr9zudQcQnVbDYKDie5a%2BwfqIzj7ngMUvWs%2Bwq4EB7HUVX2W0JF4Xf4n8YlqLGjIS8brZLdeQylx68L8GleJkXWWkzYMky9pPGZL35LQbAevTNU9PaZCkQuGPitWtel%2FUs65p3JSIKJC9mBGAx04ihP%2Ble3ZzJ949oSfh8xsJBofUw29Th1Z5%2BkYrkEVH04OR%2FKP3VloW%2FKNDYYMlw%2B4MTkzrIsqMPbENxuNS%2B5CJCpEMRDhTOh%2BFgCUjZrk62vgcdtbrXeKrmCNtDCfWMHI5xLo1qntxa%2FNcXUAMX8NZqFjZCj0PyROKVkHUc3QcVY%2FvVWJsbrqR8aW59PAGf%2FARyDbItUV1ktRP7aQexfn8xSO7GpldfPmEAopCM8tfMtS1%2B2bs0%3D" style="width:900px; height:800px;"></iframe>
+        <iframe name="myiframe" src="iframe2.html" style="width:900px; height:800px;"></iframe>
     </body>
 </html>
 HTML;
 
+        $iframeFilename = '/tmp/iframe2.html';
         $filename = '/tmp/iframe1.html';
 
         file_put_contents($filename, $html);
-
-        $year = date('Y');
-        $year++;
+        file_put_contents($iframeFilename, $htmlIframe);
 
         $casper = new Casper(self::$casperBinPath);
 
         $casper->start('file:///tmp/iframe1.html')
             ->switchToChildFrame(0)
-            ->fillForm('#tokenizerForm', array(
-                'tokenizerForm\:cardNumber' => 'testing',
-                'tokenizerForm\:cardHolder' => 'Jean Valjean',
-                'tokenizerForm\:cardExpiryYear' => $year,
-                'tokenizerForm\:cardSecurityCode' => '123',
+            ->fillForm('#form', array(
+                'field1' => 'testing',
+                'field2' => 'Jean Valjean',
+                'field3' => '2017',
+                'field4' => '123',
             ))
             ->switchToParentFrame()
             ->capture(
@@ -238,7 +254,7 @@ HTML;
 
         $found = false;
         foreach ($casper->getOutput() as $logLine) {
-            if (preg_match('/Set "tokenizerForm:cardNumber" field value to testing/', $logLine)) {
+            if (preg_match('/Set "field1" field value to testing/', $logLine)) {
                 $found = true;
             }
         }
@@ -374,6 +390,7 @@ FRAGMENT
     /**
      * @dataProvider getEngines
      * @param string $engine
+     * @throws Exception
      */
     public function testGetStatus($engine)
     {
@@ -381,7 +398,7 @@ FRAGMENT
 
         $casper->setOptions(['engine' => $engine]);
 
-        $casper->start('https://www.w3.org/');
+        $casper->start('http://guidet.alexandre.free.fr');
         $casper->run();
 
         $status = $casper->getStatus();
@@ -392,6 +409,7 @@ FRAGMENT
     /**
      * @dataProvider getEngines
      * @param string $engine
+     * @throws Exception
      */
     public function testGetStatusText($engine)
     {
@@ -399,7 +417,7 @@ FRAGMENT
 
         $casper->setOptions(['engine' => $engine]);
 
-        $casper->start('https://www.w3.org/');
+        $casper->start('http://guidet.alexandre.free.fr');
         $casper->run();
 
         $statusText = $casper->getStatusText();
