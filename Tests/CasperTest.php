@@ -287,6 +287,53 @@ TEXT;
         @unlink($filename);
     }
 
+    public function testEvaluateToVar()
+    {
+        $evaluateHtml = <<<TEXT
+<!DOCTYPE html>
+<html>
+    <head>
+    <meta charset="UTF-8">
+    <title>test evaluate</title>
+    </head>
+    <body>
+        <a id="theLink" href='http://www.google.com' onclick='return confirm("are you sure")'>link to google</a>
+        <ul id="theList">
+            <li class="item">Item 1</li>
+            <li class="item">Item 2</li>
+        </ul>
+    </body>
+</html>
+TEXT;
+        $filename = '/tmp/test-evaluate-var.html';
+
+        file_put_contents($filename, $evaluateHtml);
+
+        $evaluate_href = <<<TEXT
+
+            var theLink = document.getElementById("theLink");
+
+            return theLink.href;
+TEXT;
+
+        $evaluate_item = <<<TEXT
+            return document.getElementsByClassName("item").length; 
+TEXT;
+
+        $casper = new Casper(self::$casperBinPath);
+        $casper->start($filename)
+            ->evaluateToVar('href',$evaluate_href)
+            ->evaluateToVar('num_items',$evaluate_item)
+            ->run();
+
+        $vars = $casper->getVars();
+        
+        $this->assertContains('google.com', $vars['href']);
+        $this->assertEquals(2, $vars['num_items']);
+
+        @unlink($filename);
+    }
+
     public function testDoubleClick()
     {
         $evaluateHtml = <<<TEXT
