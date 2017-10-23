@@ -36,6 +36,16 @@ class Casper
     private $statusText = '';
     private $cookies = [];
 
+	private $proxy = [
+		'host' => false,
+		'port' => false,
+		'type' => 'manual',
+		'user' => false,
+		'pass' => false
+	];
+
+	private $proxyIsSet = false;
+
     public function __construct($path2casper = null, $tempDir = null)
     {
         if ($path2casper) {
@@ -103,6 +113,24 @@ casper.page.customHeaders = {
     {
         $this->userAgent = $userAgent;
     }
+
+	/**
+	 * Add proxy usage
+	 *
+	 * @param        $host
+	 * @param        $port
+	 * @param string $type
+	 * @param string $user
+	 * @param string $pass
+	 */
+	public function setProxy($host, $port, $type = 'manual', $user = '', $pass = '') {
+		$this->proxyIsSet    = true;
+		$this->proxy['host'] = $host;
+		$this->proxy['port'] = $port;
+		$this->proxy['type'] = $type;
+		$this->proxy['user'] = $user;
+		$this->proxy['pass'] = $pass;
+	}
 
     /**
      * enable debug logging into syslog
@@ -205,6 +233,18 @@ var casper = require('casper').create({
 });
 
 casper.userAgent('$this->userAgent');
+
+FRAGMENT;
+
+        if($this->proxyIsSet){
+	        $fragment .= <<<FRAGMENT
+phantom.setProxy('{$this->proxy['host']}','{$this->proxy['port']}','{$this->proxy['type']}','{$this->proxy['user']}','{$this->proxy['pass']}');
+FRAGMENT;
+
+        }
+
+	    $fragment .= <<<FRAGMENT
+
 casper.start().then(function() {
     this.open('$url', {
         headers: {
