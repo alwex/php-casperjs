@@ -1,7 +1,7 @@
 {
-    "name": "phpcasperjs/phpcasperjs",
+    "name": "mihailShumilov/phpcasperjs",
     "description": "Simple PHP wrapper for CasperJS",
-    "homepage": "https://github.com/alwex/php-casperjs",
+    "homepage": "https://github.com/mihailShumilov/php-casperjs",
     "keywords": ["phpunit", "test", "browser"],
     "type": "library",
     "license": "MIT",
