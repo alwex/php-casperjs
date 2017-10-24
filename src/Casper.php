@@ -249,7 +249,7 @@ casper.start().then(function() {
     this.open('$url', {
         headers: {
             'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8',
-            'AcceptEncoding':'gzip, deflate, br
+            'AcceptEncoding':'gzip, deflate, br'
         }
     });
 });
