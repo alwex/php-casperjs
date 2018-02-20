@@ -31,18 +31,22 @@ class Casper
     private $loadTime = '';
     private $tempDir = '/tmp';
     private $path2casper = '/usr/local/bin/'; //path to CasperJS
+    private $path2phantom = '/usr/local/bin/phantomjs'; // path to PhantomJS
     private $headers = [];
     private $status;
     private $statusText = '';
     private $cookies = [];
 
-    public function __construct($path2casper = null, $tempDir = null)
+    public function __construct($path2casper = null, $tempDir = null, $path2phantom = null)
     {
         if ($path2casper) {
             $this->path2casper = $path2casper;
         }
         if ($tempDir) {
             $this->tempDir = $tempDir;
+        }
+        if ($path2phantom) {
+            $this->path2phantom = $path2phantom;
         }
     }
 
@@ -601,8 +605,8 @@ FRAGMENT;
         foreach ($this->options as $option => $value) {
             $options .= ' --' . $option . '=' . $value;
         }
+        exec('PHANTOMJS_EXECUTABLE='.$this->path2phantom .' '. $this->path2casper . 'casperjs ' . $filename . $options, $output);
 
-        exec($this->path2casper . 'casperjs ' . $filename . $options, $output);
         if (empty($output)) {
             throw new \Exception('Can not find CasperJS.');
         }
