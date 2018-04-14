@@ -280,6 +280,29 @@ FRAGMENT;
 
         return $this;
     }
+    /**
+     * upload Files
+     * to the element matching the provided selector:
+     *
+     * @param string $selector
+     * @param array $data
+     *
+     * @return \Browser\Casper
+     */
+    public function uploadFile($selector, $data = array())
+    {
+        $jsonData = json_encode($data);
+        $fragment = <<<FRAGMENT
+casper.then(function () {
+    this.page.uploadFile('$selector', $jsonData);
+});
+FRAGMENT;
+
+        $this->script .= $fragment;
+
+        return $this;
+    }
+
 
     /**
      * Sends native keyboard events
